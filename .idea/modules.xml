@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Unleash2.iml" filepath="$PROJECT_DIR$/Unleash2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Unleash.iml" filepath="$PROJECT_DIR$/Unleash.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

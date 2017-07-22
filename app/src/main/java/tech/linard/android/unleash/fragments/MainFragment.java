@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringDef;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -183,11 +184,11 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
                     data.getDouble(
                             data.getColumnIndex(UnleashContract.TickerEntry.COLUMN_LOW))));
 
-            int dateUnixTime = data.getColumnIndex(UnleashContract.TickerEntry.COLUMN_DATE);
-            Date date = new Date(dateUnixTime);
-            DateFormat dateFormat = DateFormat.getDateTimeInstance();
-            dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-            String formatedDate = dateFormat.format(date);
+            int dateUnixTime = data.getInt(
+                    data.getColumnIndex(UnleashContract.TickerEntry.COLUMN_DATE));
+
+            Date date = new Date((long) dateUnixTime*1000);
+            String formatedDate = DateFormat.getDateTimeInstance().format(date);
             mDate.setText(formatedDate);
         }
     }
