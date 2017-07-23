@@ -123,14 +123,6 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
         getLoaderManager().initLoader(TICKER_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
 
-        mBuy = getActivity().findViewById(R.id.main_buy_value);
-        mSell = getActivity().findViewById(R.id.main_sell_value);
-        mHigh = getActivity().findViewById(R.id.main_high_value);
-        mLow = getActivity().findViewById(R.id.main_low_value);
-        mDate = getActivity().findViewById(R.id.main_date_value);
-
-
-
     }
 
     /**
@@ -171,25 +163,25 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         Toast.makeText(getActivity().getBaseContext(), "LOADER FINISHED", Toast.LENGTH_SHORT).show();
         if (data != null && data.moveToFirst()) {
-            mBuy.setText(String.valueOf(
-                    data.getDouble(
-                            data.getColumnIndex(UnleashContract.TickerEntry.COLUMN_BUY))));
-            mSell.setText(String.valueOf(
-                    data.getDouble(
-                            data.getColumnIndex(UnleashContract.TickerEntry.COLUMN_SELL))));
-            mHigh.setText(String.valueOf(
-                    data.getDouble(
-                            data.getColumnIndex(UnleashContract.TickerEntry.COLUMN_HIGH))));
-            mLow.setText(String.valueOf(
-                    data.getDouble(
-                            data.getColumnIndex(UnleashContract.TickerEntry.COLUMN_LOW))));
-
-            int dateUnixTime = data.getInt(
-                    data.getColumnIndex(UnleashContract.TickerEntry.COLUMN_DATE));
-
-            Date date = new Date((long) dateUnixTime*1000);
-            String formatedDate = DateFormat.getDateTimeInstance().format(date);
-            mDate.setText(formatedDate);
+//            mBuy.setText(String.valueOf(
+//                    data.getDouble(
+//                            data.getColumnIndex(UnleashContract.TickerEntry.COLUMN_BUY))));
+//            mSell.setText(String.valueOf(
+//                    data.getDouble(
+//                            data.getColumnIndex(UnleashContract.TickerEntry.COLUMN_SELL))));
+//            mHigh.setText(String.valueOf(
+//                    data.getDouble(
+//                            data.getColumnIndex(UnleashContract.TickerEntry.COLUMN_HIGH))));
+//            mLow.setText(String.valueOf(
+//                    data.getDouble(
+//                            data.getColumnIndex(UnleashContract.TickerEntry.COLUMN_LOW))));
+//
+//            int dateUnixTime = data.getInt(
+//                    data.getColumnIndex(UnleashContract.TickerEntry.COLUMN_DATE));
+//
+//            Date date = new Date((long) dateUnixTime*1000);
+//            String formatedDate = DateFormat.getDateTimeInstance().format(date);
+//            mDate.setText(formatedDate);
         }
     }
 

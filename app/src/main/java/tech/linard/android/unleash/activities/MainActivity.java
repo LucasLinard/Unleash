@@ -33,12 +33,14 @@ import tech.linard.android.unleash.R;
 import tech.linard.android.unleash.Util;
 import tech.linard.android.unleash.data.UnleashContract.TickerEntry;
 import tech.linard.android.unleash.fragments.MainFragment;
+import tech.linard.android.unleash.fragments.OrderbookFragment;
 import tech.linard.android.unleash.model.Ticker;
 import tech.linard.android.unleash.network.VolleySingleton;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        MainFragment.OnFragmentInteractionListener {
+                     MainFragment.OnFragmentInteractionListener,
+                     OrderbookFragment.OnFragmentInteractionListener  {
 
     // Constants
     // The authority for the sync adapter's content provider
@@ -225,6 +227,7 @@ public class MainActivity extends BaseActivity
                 fragment = new MainFragment();
                 break;
             case R.id.nav_gallery:
+                fragment = new OrderbookFragment();
                 break;
             case R.id.nav_slideshow:
                 break;
@@ -254,4 +257,5 @@ public class MainActivity extends BaseActivity
     public void onFragmentInteraction(Uri uri) {
 
     }
+
 }
