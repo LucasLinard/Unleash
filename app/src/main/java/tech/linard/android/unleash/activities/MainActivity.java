@@ -182,7 +182,6 @@ public class MainActivity extends BaseActivity
 
     }
     private void testNetwork() {
-
         String url = "https://www.mercadobitcoin.net/api/ticker/";
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override

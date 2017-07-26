@@ -1,14 +1,12 @@
 package tech.linard.android.unleash;
 
-import android.util.Pair;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import tech.linard.android.unleash.model.OrderBook;
-import tech.linard.android.unleash.model.OrderBookItem;
+import tech.linard.android.unleash.model.Orderbook;
+import tech.linard.android.unleash.model.OrderbookItem;
 import tech.linard.android.unleash.model.Ticker;
 
 /**
@@ -30,28 +28,24 @@ public class Util {
         return currentTicker;
     }
 
-    public static OrderBook orderbookFromJSon(JSONObject response) {
-        OrderBook orderBook = new OrderBook();
-
-        orderBook.setAsks(fetchOrderbookItemsFromJSON(response, "asks"));
-        orderBook.setBids(fetchOrderbookItemsFromJSON(response, "bids"));
-
-        return orderBook;
+    public static Orderbook orderbookFromJSon(JSONObject response) {
+        Orderbook orderbook = new Orderbook();
+        orderbook.setAsks(fetchOrderbookItemsFromJSON(response, "asks"));
+        orderbook.setBids(fetchOrderbookItemsFromJSON(response, "bids"));
+        return orderbook;
     }
 
-    private static ArrayList<OrderBookItem>
+    private static ArrayList<OrderbookItem>
     fetchOrderbookItemsFromJSON(JSONObject jsonObject, String string) {
-        ArrayList<OrderBookItem> arrayList = new ArrayList<>();
+        ArrayList<OrderbookItem> arrayList = new ArrayList<>();
         JSONArray asksArray = jsonObject.optJSONArray(string);
 
         for (int x = 0; x < asksArray.length(); x++) {
             JSONArray currentItem = asksArray.optJSONArray(x);
             double price = currentItem.optDouble(0);
             double volume = currentItem.optDouble(1);
-            arrayList.add(new OrderBookItem(price, volume));
+            arrayList.add(new OrderbookItem(price, volume));
         }
-
         return arrayList;
-
     }
 }

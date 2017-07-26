@@ -22,8 +22,7 @@ import java.util.ArrayList;
 
 import tech.linard.android.unleash.R;
 import tech.linard.android.unleash.Util;
-import tech.linard.android.unleash.model.OrderBook;
-import tech.linard.android.unleash.model.Ticker;
+import tech.linard.android.unleash.model.Orderbook;
 import tech.linard.android.unleash.network.VolleySingleton;
 
 /**
@@ -118,7 +117,7 @@ public class OrderbookFragment extends Fragment
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        OrderBook orderBook = Util.orderbookFromJSon(response);
+                        Orderbook orderbook = Util.orderbookFromJSon(response);
                     }
                 }, new Response.ErrorListener() {
             @Override
