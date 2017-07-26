@@ -1,12 +1,17 @@
 package tech.linard.android.unleash.fragments;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.ArrayList;
 
 import tech.linard.android.unleash.R;
 
@@ -16,7 +21,8 @@ import tech.linard.android.unleash.R;
  * {@link OrderbookFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class OrderbookFragment extends Fragment {
+public class OrderbookFragment extends Fragment
+        implements LoaderManager.LoaderCallbacks<ArrayList>{
 
     private OnFragmentInteractionListener mListener;
 
@@ -69,5 +75,20 @@ public class OrderbookFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public Loader<ArrayList> onCreateLoader(int id, Bundle args) {
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<ArrayList> loader, ArrayList data) {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<ArrayList> loader) {
+
     }
 }

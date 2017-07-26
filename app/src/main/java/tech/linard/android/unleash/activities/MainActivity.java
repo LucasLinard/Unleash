@@ -194,7 +194,7 @@ public class MainActivity extends BaseActivity
                 contentValues.put(TickerEntry.COLUMN_LOW, ticker.getLow());
                 contentValues.put(TickerEntry.COLUMN_BUY, ticker.getBuy());
                 contentValues.put(TickerEntry.COLUMN_SELL, ticker.getSell());
-                contentValues.put(TickerEntry.COLUMN_LAST, ticker.getVol());
+                contentValues.put(TickerEntry.COLUMN_LAST, ticker.getLast());
                 contentValues.put(TickerEntry.COLUMN_VOL, ticker.getVol());
                 contentValues.put(TickerEntry.COLUMN_DATE, ticker.getDate());
 
