@@ -1,132 +1,123 @@
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="tech.linard.android.unleash.fragments.MainFragment">
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/label_last"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/last_txt"
+            android:textAppearance="@style/Headline" />
 
-    <TextView
-        android:id="@+id/bitcoin_value"
-        android:layout_width="276dp"
-        android:layout_height="185dp"
-        android:background="@color/accent"
-        android:textColor="@color/primary_light"
-        android:padding="@dimen/fab_margin"
-        android:gravity="center"
-        android:foregroundGravity="center"
-        android:text="TextView"
-        android:textSize="48sp"
-        tools:layout_editor_absoluteY="16dp"
-        tools:layout_editor_absoluteX="54dp" />
+        <TextView
+            android:id="@+id/value_last"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="R$ 0,00"
+            android:textAppearance="@style/Display1"
+            tools:text="R$ 9.999,00" />
 
-    <TextView
-        android:id="@+id/textView15"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Últimas Negociações (24h):"
-        tools:layout_editor_absoluteX="105dp"
-        tools:layout_editor_absoluteY="247dp" />
+            <TextView
+                android:id="@+id/value_timestamp"
+                android:text="22/07/2017 13:00"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/textView16"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Maior:"
-        tools:layout_editor_absoluteX="54dp"
-        tools:layout_editor_absoluteY="328dp" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/textView17"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Menor:"
-        tools:layout_editor_absoluteY="328dp"
-        app:layout_constraintRight_toLeftOf="@+id/textView18"
-        android:layout_marginRight="8dp" />
+            <TextView
+                android:id="@+id/label_volume"
+                android:text="@string/label_vol"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/value_vol"
+                android:text="999.999.999,00"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/textView18"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="VALOR"
-        tools:layout_editor_absoluteX="286dp"
-        tools:layout_editor_absoluteY="328dp" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/textView19"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="VALOR"
-        tools:layout_editor_absoluteY="328dp"
-        app:layout_constraintLeft_toRightOf="@+id/textView16"
-        android:layout_marginLeft="8dp" />
+            <TextView
+                android:id="@+id/label_high"
+                android:text="@string/high"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/textView20"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Ofertas:"
-        tools:layout_editor_absoluteX="168dp"
-        tools:layout_editor_absoluteY="363dp" />
+            <TextView
+                android:id="@+id/value_high"
+                android:text="R$ 9.999,00"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/textView21"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Compra"
-        tools:layout_editor_absoluteX="54dp"
-        tools:layout_editor_absoluteY="396dp" />
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/textView22"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="VALOR"
-        tools:layout_editor_absoluteX="286dp"
-        tools:layout_editor_absoluteY="396dp" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/textView23"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Venda:"
-        tools:layout_editor_absoluteY="396dp"
-        app:layout_constraintRight_toLeftOf="@+id/textView22"
-        android:layout_marginRight="8dp" />
+            <TextView
+                android:id="@+id/label_low"
+                android:text="@string/low"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/value_low"
+                android:text="R$ 9.999,00"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/VALOR"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        tools:layout_editor_absoluteY="396dp"
-        app:layout_constraintLeft_toRightOf="@+id/textView21"
-        android:layout_marginLeft="8dp" />
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/textView25"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Volume"
-        tools:layout_editor_absoluteX="105dp"
-        tools:layout_editor_absoluteY="284dp" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/textView26"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:text="VALOR"
-        app:layout_constraintLeft_toRightOf="@+id/textView25"
-        tools:layout_editor_absoluteY="284dp" />
+            <TextView
+                android:id="@+id/label_buy"
+                android:text="@string/buy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/value_buy"
+                android:text="R$ 9.999,00"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/textView27"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="54dp"
-        tools:layout_editor_absoluteY="184dp" />
+        </LinearLayout>
 
-</android.support.constraint.ConstraintLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/label_sell"
+                android:text="@string/sell"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/value_sell"
+                android:text="R$ 9.999,00"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

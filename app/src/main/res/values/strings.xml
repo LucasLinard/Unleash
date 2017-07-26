@@ -16,4 +16,6 @@
     <string name="buy">Buy:</string>
     <string name="low">Low:</string>
     <string name="high">High:</string>
+    <string name="last_txt">Preço unitário do último negócio</string>
+    <string name="label_vol">Volume negociado(24h):</string>
 </resources>

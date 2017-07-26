@@ -242,7 +242,7 @@ public class MainActivity extends BaseActivity
             if (fragment != null) {
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager()
                         .beginTransaction();
-                //fragmentTransaction.replace(R.id.content_frame, fragment);
+                fragmentTransaction.replace(R.id.fragment, fragment);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
