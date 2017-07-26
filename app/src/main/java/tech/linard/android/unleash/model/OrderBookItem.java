@@ -1,7 +1,5 @@
 package tech.linard.android.unleash.model;
 
-import java.math.BigDecimal;
-
 /**
  * Created by llinard on 08/07/17.
  */
@@ -13,6 +11,10 @@ public class OrderBookItem {
     public OrderBookItem(Double price, Double volume) {
         this.price = price;
         this.volume = volume;
+    }
+
+    public OrderBookItem() {
+
     }
 
     public Double getPrice() {

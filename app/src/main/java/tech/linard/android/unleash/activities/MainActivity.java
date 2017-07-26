@@ -212,6 +212,7 @@ public class MainActivity extends BaseActivity
                 Toast.makeText(MainActivity.this, "Volley ERROR!", Toast.LENGTH_SHORT).show();
             }
         });
+
         VolleySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
     }
 

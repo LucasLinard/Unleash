@@ -10,9 +10,14 @@ public class OrderBook {
     private ArrayList<OrderBookItem> asks;
     private ArrayList<OrderBookItem> bids;
 
+
     public OrderBook(ArrayList<OrderBookItem> asks, ArrayList<OrderBookItem> bids) {
         this.asks = asks;
         this.bids = bids;
+    }
+
+    public OrderBook() {
+
     }
 
     public ArrayList<OrderBookItem> getAsks() {

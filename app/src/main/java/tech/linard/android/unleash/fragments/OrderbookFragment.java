@@ -1,9 +1,9 @@
 package tech.linard.android.unleash.fragments;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -11,9 +11,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 import tech.linard.android.unleash.R;
+import tech.linard.android.unleash.Util;
+import tech.linard.android.unleash.model.OrderBook;
+import tech.linard.android.unleash.model.Ticker;
+import tech.linard.android.unleash.network.VolleySingleton;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,9 +43,16 @@ public class OrderbookFragment extends Fragment
 
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        fetchOrderbookFromNetwork();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        fetchOrderbookFromNetwork();
         return inflater.inflate(R.layout.fragment_orderbook, container, false);
     }
 
@@ -91,4 +109,25 @@ public class OrderbookFragment extends Fragment
     public void onLoaderReset(Loader<ArrayList> loader) {
 
     }
+
+    private void fetchOrderbookFromNetwork() {
+        String url = "https://www.mercadobitcoin.net/api/orderbook/";
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET,
+                url,
+                null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        OrderBook orderBook = Util.orderbookFromJSon(response);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        VolleySingleton.getInstance(getContext()).addToRequestQueue(jsObjRequest);
+    }
+
 }
