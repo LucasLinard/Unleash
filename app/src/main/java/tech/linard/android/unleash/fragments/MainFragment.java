@@ -179,18 +179,16 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
         Toast.makeText(getActivity().getBaseContext(), "LOADER FINISHED", Toast.LENGTH_SHORT).show();
         if (data != null && data.moveToFirst()) {
 
-            NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.getDefault());
-
-            mLast.setText(nf.format(data.getDouble(
+            mLast.setText("R$ " + String.valueOf(data.getDouble(
                             data.getColumnIndex(UnleashContract.TickerEntry.COLUMN_LAST))));
 
-            mBuy.setText(nf.format(data.getDouble(
+            mBuy.setText("R$ " + String.valueOf(data.getDouble(
                             data.getColumnIndex(UnleashContract.TickerEntry.COLUMN_BUY))));
-            mSell.setText(nf.format(data.getDouble(
+            mSell.setText("R$ " + String.valueOf(data.getDouble(
                             data.getColumnIndex(UnleashContract.TickerEntry.COLUMN_SELL))));
-            mHigh.setText(nf.format(data.getDouble(
+            mHigh.setText("R$ " + String.valueOf(data.getDouble(
                             data.getColumnIndex(UnleashContract.TickerEntry.COLUMN_HIGH))));
-            mLow.setText(nf.format(data.getDouble(
+            mLow.setText("R$ " + String.valueOf(data.getDouble(
                             data.getColumnIndex(UnleashContract.TickerEntry.COLUMN_LOW))));
 
             mVol.setText("BTC: " + String.valueOf(
