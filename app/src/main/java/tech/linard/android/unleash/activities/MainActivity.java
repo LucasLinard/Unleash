@@ -39,14 +39,16 @@ import tech.linard.android.unleash.data.UnleashContract;
 import tech.linard.android.unleash.data.UnleashContract.TickerEntry;
 import tech.linard.android.unleash.fragments.MainFragment;
 import tech.linard.android.unleash.fragments.OrderbookFragment;
+import tech.linard.android.unleash.fragments.TradeFragment;
+import tech.linard.android.unleash.fragments.dummy.DummyContent;
 import tech.linard.android.unleash.model.Ticker;
-import tech.linard.android.unleash.model.Trade;
 import tech.linard.android.unleash.network.VolleySingleton;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         MainFragment.OnFragmentInteractionListener,
-        OrderbookFragment.OnFragmentInteractionListener  {
+        OrderbookFragment.OnFragmentInteractionListener,
+        TradeFragment.OnListFragmentInteractionListener {
 
     Fragment mFragmentMain = null;
 
@@ -299,10 +301,11 @@ public class MainActivity extends BaseActivity
             case R.id.nav_home:
                 mFragmentMain = new MainFragment();
                 break;
-            case R.id.nav_gallery:
+            case R.id.orderbook:
                 mFragmentMain = new OrderbookFragment();
                 break;
-            case R.id.nav_slideshow:
+            case R.id.trade_list:
+                mFragmentMain = new TradeFragment();
                 break;
             case R.id.nav_manage:
                 break;
@@ -331,4 +334,8 @@ public class MainActivity extends BaseActivity
 
     }
 
+    @Override
+    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+
+    }
 }
