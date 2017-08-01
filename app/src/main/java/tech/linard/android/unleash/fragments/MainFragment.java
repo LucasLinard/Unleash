@@ -128,12 +128,12 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
         super.onActivityCreated(savedInstanceState);
 
         //init fields
-        mBuy = getActivity().findViewById(R.id.value_buy);
+        mBuy  = getActivity().findViewById(R.id.value_buy);
         mSell = getActivity().findViewById(R.id.value_sell);
         mHigh = getActivity().findViewById(R.id.value_high);
-        mLow = getActivity().findViewById(R.id.value_low);
+        mLow  = getActivity().findViewById(R.id.value_low);
         mDate = getActivity().findViewById(R.id.value_timestamp);
-        mVol = getActivity().findViewById(R.id.value_vol);
+        mVol  = getActivity().findViewById(R.id.value_vol);
         mLast = getActivity().findViewById(R.id.value_last);
 
     }
@@ -155,7 +155,6 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Toast.makeText(getActivity().getBaseContext(), "LOADER started", Toast.LENGTH_SHORT).show();
         String sortOrder = UnleashContract.TickerEntry.COLUMN_DATE + " DESC";
 
         String[] columns = {UnleashContract.TickerEntry.COLUMN_HIGH
@@ -176,7 +175,6 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Toast.makeText(getActivity().getBaseContext(), "LOADER FINISHED", Toast.LENGTH_SHORT).show();
         if (data != null && data.moveToFirst()) {
 
             mLast.setText("R$ " + String.valueOf(data.getDouble(

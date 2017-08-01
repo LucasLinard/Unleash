@@ -12,6 +12,4 @@ public class Trade {
     private double ammount;
     private Integer transactionID;
     private String type;
-
-
 }

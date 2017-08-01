@@ -13,6 +13,7 @@ public class UnleashContract {
     public static final String CONTENT_AUTHORITY = "tech.linard.android.unleash";
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
     public static final String PATH_TICKER = "ticker";
+    public static final String PATH_TRADE = "trade";
 
 
     public static final class TickerEntry implements BaseColumns {
@@ -38,6 +39,35 @@ public class UnleashContract {
 
 
         public static Uri buildTickerUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+    }
+    public static final class TradeEntry implements BaseColumns {
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_TRADE).build();
+
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_TRADE;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_TRADE;
+
+        // Table name
+        public static final String TABLE_NAME = "trade";
+
+        // Fields
+        private Integer date;
+        private double price;
+        private double ammount;
+        private Integer transactionID;
+        private String type;
+
+        public static final String COLUMN_DATE = "date";
+        public static final String COLUMN_PRICE = "price";
+        public static final String COLUMN_AMMOUNT = "ammount";
+        public static final String COLUMN_TRANSACTION_ID = "transactionid";
+        public static final String COLUMN_TYPE = "type";
+
+        public static Uri buildTradeUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }

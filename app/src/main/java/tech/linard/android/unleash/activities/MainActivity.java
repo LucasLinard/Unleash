@@ -25,22 +25,30 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.Vector;
 
 import tech.linard.android.unleash.R;
 import tech.linard.android.unleash.Util;
+import tech.linard.android.unleash.data.UnleashContract;
 import tech.linard.android.unleash.data.UnleashContract.TickerEntry;
 import tech.linard.android.unleash.fragments.MainFragment;
 import tech.linard.android.unleash.fragments.OrderbookFragment;
 import tech.linard.android.unleash.model.Ticker;
+import tech.linard.android.unleash.model.Trade;
 import tech.linard.android.unleash.network.VolleySingleton;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-                     MainFragment.OnFragmentInteractionListener,
-                     OrderbookFragment.OnFragmentInteractionListener  {
+        MainFragment.OnFragmentInteractionListener,
+        OrderbookFragment.OnFragmentInteractionListener  {
+
+    Fragment mFragmentMain = null;
 
     // Constants
     // The authority for the sync adapter's content provider
@@ -51,6 +59,7 @@ public class MainActivity extends BaseActivity
     public static final String ACCOUNT = "dummyaccount";
     // Instance fields
     Account mAccount;
+
 
     // Sync interval constants
     public static final long SECONDS_PER_MINUTE = 60L;
@@ -66,6 +75,7 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        testNetwork();
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -101,6 +111,14 @@ public class MainActivity extends BaseActivity
                 AUTHORITY,
                 Bundle.EMPTY,
                 SYNC_INTERVAL);
+
+        mFragmentMain = new MainFragment();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager()
+                .beginTransaction();
+        fragmentTransaction.replace(R.id.fragment, mFragmentMain);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+
     }
 
     private Account CreateSyncAccount(Context context) {
@@ -182,52 +200,107 @@ public class MainActivity extends BaseActivity
 
     }
     private void testNetwork() {
-        String url = "https://www.mercadobitcoin.net/api/ticker/";
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Toast.makeText(MainActivity.this, "Volley OK!", Toast.LENGTH_SHORT).show();
-                Ticker ticker = Util.tickerFromJSon(response.optJSONObject("ticker"));
-                ContentValues contentValues = new ContentValues();
-                contentValues.put(TickerEntry.COLUMN_HIGH, ticker.getHigh());
-                contentValues.put(TickerEntry.COLUMN_LOW, ticker.getLow());
-                contentValues.put(TickerEntry.COLUMN_BUY, ticker.getBuy());
-                contentValues.put(TickerEntry.COLUMN_SELL, ticker.getSell());
-                contentValues.put(TickerEntry.COLUMN_LAST, ticker.getLast());
-                contentValues.put(TickerEntry.COLUMN_VOL, ticker.getVol());
-                contentValues.put(TickerEntry.COLUMN_DATE, ticker.getDate());
+        String url = null;
 
-                Uri newUri = getContentResolver()
-                        .insert(TickerEntry.CONTENT_URI, contentValues);
-                if (newUri != null) {
-                    // If the new content URI is null, then there was an error with insertion.
-                    Toast.makeText(MainActivity.this, "Ticker GRAVADO!",
-                            Toast.LENGTH_SHORT).show();
+        url = "https://www.mercadobitcoin.net/api/trades/";
+
+        JsonArrayRequest tradeJsonArrayRequest = new JsonArrayRequest(url,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Vector<ContentValues> cVVector
+                                = new Vector<ContentValues>(response.length());
+                        for (int i = 0; i < response.length();i++) {
+                            ContentValues contentValues = new ContentValues();
+                            JSONObject jsonObject = response.optJSONObject(i);
+                            Integer date =  jsonObject.optInt("date");
+                            double price = jsonObject.optDouble("price");
+                            double ammount = jsonObject.optDouble("amount");
+                            Integer transactionID = jsonObject.optInt("tid");
+                            String type = jsonObject.optString("type");
+
+                            contentValues.put(UnleashContract.TradeEntry.COLUMN_DATE, date);
+                            contentValues.put(UnleashContract.TradeEntry.COLUMN_PRICE, price);
+                            contentValues.put(UnleashContract.TradeEntry.COLUMN_AMMOUNT,ammount);
+                            contentValues.put(UnleashContract.TradeEntry.COLUMN_TRANSACTION_ID,transactionID);
+                            contentValues.put(UnleashContract.TradeEntry.COLUMN_TYPE,type);
+
+                            cVVector.add(contentValues);
+
+                        }
+                        int inserted = 0;
+                        if (cVVector.size() > 0) {
+                            ContentValues[] cvArray = new ContentValues[cVVector.size()];
+                            cVVector.toArray(cvArray);
+                            inserted = getContentResolver().bulkInsert(UnleashContract.TradeEntry.CONTENT_URI,
+                                    cvArray);
+                            getContentResolver().notifyChange(UnleashContract.TradeEntry.CONTENT_URI, null);
+
+                        }
+                        if (inserted > 0) {
+                            getContentResolver().notifyChange(UnleashContract.TradeEntry.CONTENT_URI, null);
+                        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(MainActivity.this, "Volley ERROR!",
+                                Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
-        }, new Response.ErrorListener() {
+        );
+
+        VolleySingleton.getInstance(this).addToRequestQueue(tradeJsonArrayRequest);
+
+        url = "https://www.mercadobitcoin.net/api/ticker/";
+        JsonObjectRequest tickerJsObjRequest = new JsonObjectRequest(Request.Method.GET,
+                url,
+                null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Ticker ticker = Util.tickerFromJSon(response.optJSONObject("ticker"));
+                        ContentValues contentValues = new ContentValues();
+                        contentValues.put(TickerEntry.COLUMN_HIGH, ticker.getHigh());
+                        contentValues.put(TickerEntry.COLUMN_LOW, ticker.getLow());
+                        contentValues.put(TickerEntry.COLUMN_BUY, ticker.getBuy());
+                        contentValues.put(TickerEntry.COLUMN_SELL, ticker.getSell());
+                        contentValues.put(TickerEntry.COLUMN_LAST, ticker.getLast());
+                        contentValues.put(TickerEntry.COLUMN_VOL, ticker.getVol());
+                        contentValues.put(TickerEntry.COLUMN_DATE, ticker.getDate());
+
+                        Uri newUri = getContentResolver()
+                                .insert(TickerEntry.CONTENT_URI, contentValues);
+                        if (newUri != null) {
+                            // If the new content URI is null, then there was an error with insertion.
+                            Toast.makeText(MainActivity.this, "Sucesso no Ticker!",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(MainActivity.this, "Volley ERROR!", Toast.LENGTH_SHORT).show();
             }
         });
-
-        VolleySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
+        VolleySingleton.getInstance(this).addToRequestQueue(tickerJsObjRequest);
     }
 
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        Fragment fragment = null;
+
 
         // Handle navigation view item clicks here.
         switch (item.getItemId()) {
             case R.id.nav_home:
-                fragment = new MainFragment();
+                mFragmentMain = new MainFragment();
                 break;
             case R.id.nav_gallery:
-                fragment = new OrderbookFragment();
+                mFragmentMain = new OrderbookFragment();
                 break;
             case R.id.nav_slideshow:
                 break;
@@ -239,13 +312,13 @@ public class MainActivity extends BaseActivity
                 break;
         }
 
-            if (fragment != null) {
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager()
-                        .beginTransaction();
-                fragmentTransaction.replace(R.id.fragment, fragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-            }
+        if (mFragmentMain != null) {
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager()
+                    .beginTransaction();
+            fragmentTransaction.replace(R.id.fragment, mFragmentMain);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

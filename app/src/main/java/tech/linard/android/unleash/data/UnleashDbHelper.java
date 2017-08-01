@@ -10,7 +10,7 @@ import tech.linard.android.unleash.data.UnleashContract.*;
 
 public class UnleashDbHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     static final String DATABASE_NAME = "unleash.db";
 
@@ -35,11 +35,24 @@ public class UnleashDbHelper extends SQLiteOpenHelper {
 
         sqLiteDatabase.execSQL(SQL_CREATE_TICKER_TABLE);
 
+
+        final String SQL_CREATE_TRADE_TABLE =
+                "CREATE TABLE " + TradeEntry.TABLE_NAME + " (" +
+                        TradeEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        TradeEntry.COLUMN_DATE + " INTEGER, " +
+                        TradeEntry.COLUMN_PRICE + " REAL, " +
+                        TradeEntry.COLUMN_AMMOUNT + " REAL, " +
+                        TradeEntry.COLUMN_TRANSACTION_ID + " INTEGER, " +
+                        TradeEntry.COLUMN_TYPE+ " TEXT " +
+                        " );";
+        sqLiteDatabase.execSQL(SQL_CREATE_TRADE_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TickerEntry.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TradeEntry.TABLE_NAME);
+
         onCreate(sqLiteDatabase);
     }
 
