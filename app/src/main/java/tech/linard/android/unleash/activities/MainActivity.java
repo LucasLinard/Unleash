@@ -40,7 +40,6 @@ import tech.linard.android.unleash.data.UnleashContract.TickerEntry;
 import tech.linard.android.unleash.fragments.MainFragment;
 import tech.linard.android.unleash.fragments.OrderbookFragment;
 import tech.linard.android.unleash.fragments.TradeFragment;
-import tech.linard.android.unleash.fragments.dummy.DummyContent;
 import tech.linard.android.unleash.model.Ticker;
 import tech.linard.android.unleash.model.Trade;
 import tech.linard.android.unleash.network.VolleySingleton;
@@ -213,24 +212,27 @@ public class MainActivity extends BaseActivity
                     public void onResponse(JSONArray response) {
                         Vector<ContentValues> cVVector
                                 = new Vector<ContentValues>(response.length());
-                        for (int i = 0; i < response.length();i++) {
-                            ContentValues contentValues = new ContentValues();
-                            JSONObject jsonObject = response.optJSONObject(i);
-                            Integer date =  jsonObject.optInt("date");
-                            double price = jsonObject.optDouble("price");
-                            double ammount = jsonObject.optDouble("amount");
-                            Integer transactionID = jsonObject.optInt("tid");
-                            String type = jsonObject.optString("type");
+                        if (response.length() > 50) {
+                            for (int i = 0; i < 50 ;i++) {
+                                ContentValues contentValues = new ContentValues();
+                                JSONObject jsonObject = response.optJSONObject(i);
+                                Integer date =  jsonObject.optInt("date");
+                                double price = jsonObject.optDouble("price");
+                                double ammount = jsonObject.optDouble("amount");
+                                Integer transactionID = jsonObject.optInt("tid");
+                                String type = jsonObject.optString("type");
 
-                            contentValues.put(UnleashContract.TradeEntry.COLUMN_DATE, date);
-                            contentValues.put(UnleashContract.TradeEntry.COLUMN_PRICE, price);
-                            contentValues.put(UnleashContract.TradeEntry.COLUMN_AMMOUNT,ammount);
-                            contentValues.put(UnleashContract.TradeEntry.COLUMN_TRANSACTION_ID,transactionID);
-                            contentValues.put(UnleashContract.TradeEntry.COLUMN_TYPE,type);
+                                contentValues.put(UnleashContract.TradeEntry.COLUMN_DATE, date);
+                                contentValues.put(UnleashContract.TradeEntry.COLUMN_PRICE, price);
+                                contentValues.put(UnleashContract.TradeEntry.COLUMN_AMMOUNT,ammount);
+                                contentValues.put(UnleashContract.TradeEntry.COLUMN_TRANSACTION_ID,transactionID);
+                                contentValues.put(UnleashContract.TradeEntry.COLUMN_TYPE,type);
 
-                            cVVector.add(contentValues);
+                                cVVector.add(contentValues);
 
+                            }
                         }
+
                         int inserted = 0;
                         if (cVVector.size() > 0) {
                             ContentValues[] cvArray = new ContentValues[cVVector.size()];

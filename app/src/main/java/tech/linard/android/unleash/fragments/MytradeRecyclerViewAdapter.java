@@ -8,11 +8,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import tech.linard.android.unleash.R;
+import tech.linard.android.unleash.data.UnleashContract;
 import tech.linard.android.unleash.fragments.TradeFragment.OnListFragmentInteractionListener;
-import tech.linard.android.unleash.fragments.dummy.DummyContent.DummyItem;
 import tech.linard.android.unleash.model.Trade;
-
-import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link tech.linard.android.unleash.model.Trade}
@@ -42,8 +40,9 @@ public class MytradeRecyclerViewAdapter extends RecyclerView.Adapter<MytradeRecy
     public void onBindViewHolder(final ViewHolder holder, int position) {
         // populate the list
 //        holder.mItem = mValues.get(position);
-//        holder.mIdView.setText(mValues.get(position).id);
-//        holder.mContentView.setText(mValues.get(position).content);
+        mValues.moveToPosition(position);
+        holder.mPreco.setText(String.valueOf(mValues.getDouble(mValues.getColumnIndex(UnleashContract.TradeEntry.COLUMN_PRICE))));
+        holder.mQuantidade.setText(String.valueOf(mValues.getDouble(mValues.getColumnIndex(UnleashContract.TradeEntry.COLUMN_AMMOUNT))));
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

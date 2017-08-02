@@ -134,13 +134,15 @@ public class UnleashProvider extends ContentProvider {
     public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
         final SQLiteDatabase db = dbHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
+        int deleteResult = 0;
         switch (match) {
             case TRADE:
-                delete(uri,null,null);
+                deleteResult = delete(uri,null,null);
                 return super.bulkInsert(uri, values);
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
+
     }
 
     @Override
@@ -150,10 +152,6 @@ public class UnleashProvider extends ContentProvider {
         final SQLiteDatabase db = dbHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         int rowsDeleted;
-
-        if (selection == null) {
-            selection = "1";
-        }
 
         switch (match) {
             case TICKER:

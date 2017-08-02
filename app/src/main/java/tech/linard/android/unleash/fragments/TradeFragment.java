@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.CursorLoader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,8 +13,6 @@ import android.view.ViewGroup;
 
 import tech.linard.android.unleash.R;
 import tech.linard.android.unleash.data.UnleashContract;
-import tech.linard.android.unleash.fragments.dummy.DummyContent;
-import tech.linard.android.unleash.fragments.dummy.DummyContent.DummyItem;
 import tech.linard.android.unleash.model.Trade;
 
 /**
@@ -75,9 +72,12 @@ public class TradeFragment extends Fragment {
 
             String sortOrder = UnleashContract.TradeEntry.COLUMN_DATE + " DESC";
 
-            String[] columns = {UnleashContract.TradeEntry.COLUMN_PRICE
-                    , UnleashContract.TradeEntry.COLUMN_AMMOUNT
-                    , UnleashContract.TradeEntry.COLUMN_DATE };
+            String[] columns = {UnleashContract.TradeEntry.COLUMN_PRICE,
+                    UnleashContract.TradeEntry.COLUMN_AMMOUNT,
+                    UnleashContract.TradeEntry.COLUMN_DATE,
+                    UnleashContract.TradeEntry.COLUMN_TYPE,
+                    UnleashContract.TradeEntry._ID};
+            String limit = "LIMIT 20";
 
             Cursor cursor = getActivity().getContentResolver().query(UnleashContract.TradeEntry.CONTENT_URI,
                     columns,
