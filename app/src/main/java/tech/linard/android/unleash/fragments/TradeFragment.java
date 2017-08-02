@@ -1,8 +1,10 @@
 package tech.linard.android.unleash.fragments;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.CursorLoader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,8 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import tech.linard.android.unleash.R;
+import tech.linard.android.unleash.data.UnleashContract;
 import tech.linard.android.unleash.fragments.dummy.DummyContent;
 import tech.linard.android.unleash.fragments.dummy.DummyContent.DummyItem;
+import tech.linard.android.unleash.model.Trade;
 
 /**
  * A fragment representing a list of Items.
@@ -68,7 +72,20 @@ public class TradeFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MytradeRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+
+            String sortOrder = UnleashContract.TradeEntry.COLUMN_DATE + " DESC";
+
+            String[] columns = {UnleashContract.TradeEntry.COLUMN_PRICE
+                    , UnleashContract.TradeEntry.COLUMN_AMMOUNT
+                    , UnleashContract.TradeEntry.COLUMN_DATE };
+
+            Cursor cursor = getActivity().getContentResolver().query(UnleashContract.TradeEntry.CONTENT_URI,
+                    columns,
+                    null,
+                    null,
+                    sortOrder);
+
+            recyclerView.setAdapter(new MytradeRecyclerViewAdapter(cursor, mListener));
         }
         return view;
     }
@@ -103,6 +120,6 @@ public class TradeFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(Trade item);
     }
 }

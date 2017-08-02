@@ -42,6 +42,7 @@ import tech.linard.android.unleash.fragments.OrderbookFragment;
 import tech.linard.android.unleash.fragments.TradeFragment;
 import tech.linard.android.unleash.fragments.dummy.DummyContent;
 import tech.linard.android.unleash.model.Ticker;
+import tech.linard.android.unleash.model.Trade;
 import tech.linard.android.unleash.network.VolleySingleton;
 
 public class MainActivity extends BaseActivity
@@ -335,7 +336,7 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+    public void onListFragmentInteraction(Trade item) {
 
     }
 }

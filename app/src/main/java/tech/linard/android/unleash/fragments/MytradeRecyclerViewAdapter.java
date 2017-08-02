@@ -1,5 +1,6 @@
 package tech.linard.android.unleash.fragments;
 
+import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 import tech.linard.android.unleash.R;
 import tech.linard.android.unleash.fragments.TradeFragment.OnListFragmentInteractionListener;
 import tech.linard.android.unleash.fragments.dummy.DummyContent.DummyItem;
+import tech.linard.android.unleash.model.Trade;
 
 import java.util.List;
 
@@ -20,11 +22,12 @@ import java.util.List;
  */
 public class MytradeRecyclerViewAdapter extends RecyclerView.Adapter<MytradeRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+
+    private final Cursor mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MytradeRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
+    public MytradeRecyclerViewAdapter(Cursor data, OnListFragmentInteractionListener listener) {
+        mValues = data;
         mListener = listener;
     }
 
@@ -37,9 +40,10 @@ public class MytradeRecyclerViewAdapter extends RecyclerView.Adapter<MytradeRecy
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        // populate the list
+//        holder.mItem = mValues.get(position);
+//        holder.mIdView.setText(mValues.get(position).id);
+//        holder.mContentView.setText(mValues.get(position).content);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,25 +59,20 @@ public class MytradeRecyclerViewAdapter extends RecyclerView.Adapter<MytradeRecy
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return mValues.getCount();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public DummyItem mItem;
+        public final TextView mPreco;
+        public final TextView mQuantidade;
+        public Trade mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
-        }
-
-        @Override
-        public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            mPreco = (TextView) view.findViewById(R.id.trade_value_valor);
+            mQuantidade = (TextView) view.findViewById(R.id.trade_value_quantidade);
         }
     }
 }
