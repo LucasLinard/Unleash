@@ -5,15 +5,15 @@
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_action_home"
-            android:title="Import" />
+            android:title="Home" />
         <item
             android:id="@+id/orderbook"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
+            android:title="Orders" />
         <item
             android:id="@+id/trade_list"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
+            android:title="Trades" />
         <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"
