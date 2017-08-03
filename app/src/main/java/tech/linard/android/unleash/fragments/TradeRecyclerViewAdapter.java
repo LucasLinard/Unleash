@@ -18,13 +18,13 @@ import tech.linard.android.unleash.model.Trade;
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class MytradeRecyclerViewAdapter extends RecyclerView.Adapter<MytradeRecyclerViewAdapter.ViewHolder> {
+public class TradeRecyclerViewAdapter extends RecyclerView.Adapter<TradeRecyclerViewAdapter.ViewHolder> {
 
 
     private final Cursor mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MytradeRecyclerViewAdapter(Cursor data, OnListFragmentInteractionListener listener) {
+    public TradeRecyclerViewAdapter(Cursor data, OnListFragmentInteractionListener listener) {
         mValues = data;
         mListener = listener;
     }

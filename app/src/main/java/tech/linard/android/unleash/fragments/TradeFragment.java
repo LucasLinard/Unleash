@@ -85,7 +85,7 @@ public class TradeFragment extends Fragment {
                     null,
                     sortOrder);
 
-            recyclerView.setAdapter(new MytradeRecyclerViewAdapter(cursor, mListener));
+            recyclerView.setAdapter(new TradeRecyclerViewAdapter(cursor, mListener));
         }
         return view;
     }

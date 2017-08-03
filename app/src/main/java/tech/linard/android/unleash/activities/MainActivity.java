@@ -69,11 +69,6 @@ public class MainActivity extends BaseActivity
 
     // SYNC [END]
 
-
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,12 +90,12 @@ public class MainActivity extends BaseActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        mFragmentMain = new MainFragment();
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager()
-                .beginTransaction();
-        fragmentTransaction.replace(R.id.fragment, mFragmentMain);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+//        mFragmentMain = new MainFragment();
+//        FragmentTransaction fragmentTransaction = getSupportFragmentManager()
+//                .beginTransaction();
+//        fragmentTransaction.replace(R.id.fragment, mFragmentMain);
+//        fragmentTransaction.addToBackStack(null);
+//        fragmentTransaction.commit();
 
     }
 

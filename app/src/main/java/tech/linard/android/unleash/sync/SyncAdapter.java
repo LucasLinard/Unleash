@@ -96,7 +96,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 });
 
         // Get TRADE data
-
         Ion.with(getContext())
                 .load("https://www.mercadobitcoin.net/api/trades/")
                 .asJsonArray()
@@ -108,40 +107,40 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                             JSONArray jsonArray  = new JSONArray(string);
                             Vector<ContentValues> cVVector
                                     = new Vector<ContentValues>(jsonArray.length());
-                                for (int i = 0; i < jsonArray.length() ;i++) {
-                                    ContentValues contentValues = new ContentValues();
-                                    JSONObject jsonObject = jsonArray.optJSONObject(i);
-                                    Integer date =  jsonObject.optInt("date");
-                                    double price = jsonObject.optDouble("price");
-                                    double ammount = jsonObject.optDouble("amount");
-                                    Integer transactionID = jsonObject.optInt("tid");
-                                    String type = jsonObject.optString("type");
+                            for (int i = 0; i < jsonArray.length() ;i++) {
+                                ContentValues contentValues = new ContentValues();
+                                JSONObject jsonObject = jsonArray.optJSONObject(i);
+                                Integer date =  jsonObject.optInt("date");
+                                double price = jsonObject.optDouble("price");
+                                double ammount = jsonObject.optDouble("amount");
+                                Integer transactionID = jsonObject.optInt("tid");
+                                String type = jsonObject.optString("type");
 
-                                    contentValues
-                                            .put(UnleashContract.TradeEntry.COLUMN_DATE,
-                                                    date);
-                                    contentValues
-                                            .put(UnleashContract.TradeEntry.COLUMN_PRICE,
-                                                    price);
-                                    contentValues
-                                            .put(UnleashContract.TradeEntry.COLUMN_AMMOUNT,
-                                                    ammount);
-                                    contentValues
-                                            .put(UnleashContract.TradeEntry.COLUMN_TRANSACTION_ID,
-                                                    transactionID);
-                                    contentValues
-                                            .put(UnleashContract.TradeEntry.COLUMN_TYPE,
-                                                    type);
-                                    cVVector.add(contentValues);
-                                }
+                                contentValues
+                                        .put(UnleashContract.TradeEntry.COLUMN_DATE,
+                                                date);
+                                contentValues
+                                        .put(UnleashContract.TradeEntry.COLUMN_PRICE,
+                                                price);
+                                contentValues
+                                        .put(UnleashContract.TradeEntry.COLUMN_AMMOUNT,
+                                                ammount);
+                                contentValues
+                                        .put(UnleashContract.TradeEntry.COLUMN_TRANSACTION_ID,
+                                                transactionID);
+                                contentValues
+                                        .put(UnleashContract.TradeEntry.COLUMN_TYPE,
+                                                type);
+                                cVVector.add(contentValues);
+                            }
 
-                                if (cVVector.size() > 0) {
-                                    ContentValues[] cvArray = new ContentValues[cVVector.size()];
-                                    cVVector.toArray(cvArray);
-                                    mContentResolver.bulkInsert(UnleashContract.TradeEntry.CONTENT_URI,
-                                            cvArray);
-                                    mContentResolver.notifyChange(UnleashContract.TradeEntry.CONTENT_URI, null);
-                                }
+                            if (cVVector.size() > 0) {
+                                ContentValues[] cvArray = new ContentValues[cVVector.size()];
+                                cVVector.toArray(cvArray);
+                                mContentResolver.bulkInsert(UnleashContract.TradeEntry.CONTENT_URI,
+                                        cvArray);
+                                mContentResolver.notifyChange(UnleashContract.TradeEntry.CONTENT_URI, null);
+                            }
 
                         } catch (JSONException e1) {
                             e1.printStackTrace();
@@ -149,6 +148,5 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
                     }
                 });
-
     }
 }
