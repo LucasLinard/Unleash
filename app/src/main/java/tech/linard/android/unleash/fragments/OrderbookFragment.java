@@ -5,8 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,13 +14,12 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.CombinedData;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import org.json.JSONObject;
 
@@ -50,10 +47,8 @@ import static android.graphics.Color.RED;
 public class OrderbookFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
-    private Orderbook mOrderbook = new Orderbook();
-    private ArrayList<OrderbookItem> mAsks = null;
-    private ArrayList<OrderbookItem> mBids = null;
-
+    private ArrayList<Double> mAskPrices = null;
+    private ArrayList<Double> mBidPrices = null;
     public OrderbookFragment() {
         // Required empty public constructor
     }
@@ -66,11 +61,10 @@ public class OrderbookFragment extends Fragment {
 
     }
 
-    private double[] populateDoubleArray(ArrayList<OrderbookItem> arraylist) {
+    private double[] populateDoubleArray(ArrayList<Double> arraylist) {
         double[] d = new double[arraylist.size()];
         for (int x = 0; x<arraylist.size(); x++) {
-            float newFloat = arraylist.get(x).getPrice().floatValue();
-            d[x] = newFloat;
+            d[x] = arraylist.get(x);
         }
         return d;
     }
@@ -131,10 +125,13 @@ public class OrderbookFragment extends Fragment {
                     @Override
                     public void onResponse(JSONObject response) {
                         Orderbook orderbook = Util.orderbookFromJSon(response);
-                        Collections.sort(orderbook.getAsks(), new CustomComparator());
-                        Collections.sort(orderbook.getBids(), new CustomComparator());
-                        mOrderbook = orderbook;
-                        Toast.makeText(getActivity(), "COMPARATOR!", Toast.LENGTH_SHORT).show();
+
+                        mAskPrices = orderbook.getPrices(orderbook.getAsks());
+                        mBidPrices = orderbook.getPrices(orderbook.getBids());
+
+                        Collections.sort(mAskPrices);
+                        Collections.reverse(mBidPrices);
+
                         fillGraphic();
 
                     }
@@ -149,14 +146,51 @@ public class OrderbookFragment extends Fragment {
     }
 
     private void fillGraphic() {
-        LineChart lineChart = getActivity().findViewById(R.id.chart);
-        double[] bids = populateDoubleArray(mOrderbook.getBids());
-        double[] asks = populateDoubleArray(mOrderbook.getAsks());
+        LineChart mChart = (LineChart) getActivity().findViewById(R.id.chart);
+        mChart.setDrawGridBackground(false);
+        mChart.getDescription().setEnabled(false);
+        mChart.setDrawBorders(false);
 
-        Statistics statistics = new Statistics(asks);
+        mChart.getAxisLeft().setEnabled(false);
+        mChart.getAxisRight().setDrawAxisLine(false);
+        mChart.getAxisRight().setDrawGridLines(false);
+        mChart.getXAxis().setDrawAxisLine(false);
+        mChart.getXAxis().setDrawGridLines(false);
 
-        double q1 = statistics.getQuartile(asks, 25);
-        double q3 = statistics.getQuartile(asks, 75);
+        // enable touch gestures
+        mChart.setTouchEnabled(true);
+
+        // enable scaling and dragging
+        mChart.setDragEnabled(true);
+        mChart.setScaleEnabled(true);
+
+        // if disabled, scaling can be done on x- and y-axis separately
+        mChart.setPinchZoom(false);
+
+        Legend l = mChart.getLegend();
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+        l.setOrientation(Legend.LegendOrientation.VERTICAL);
+        l.setDrawInside(false);
+
+
+        double[] asks = populateDoubleArray(mAskPrices);
+        double[] bids = populateDoubleArray(mBidPrices);
+        ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+        dataSets.add(generateLineDataSet(asks, "asks", RED));
+        dataSets.add(generateLineDataSet(bids, "bids", GREEN));
+
+        LineData data = new LineData(dataSets);
+        mChart.setData(data);
+        mChart.invalidate();
+
+    }
+
+    private LineDataSet generateLineDataSet(double[] doubleArray, String label, int color) {
+        Statistics statistics = new Statistics(doubleArray);
+
+        double q1 = statistics.getQuartile(doubleArray, 25);
+        double q3 = statistics.getQuartile(doubleArray, 75);
         double iqr = q3 - q1;
         double upperOutliers = q3 + 1.5 * iqr;
         double lowerOutliers = q1 - 1.5 * iqr;
@@ -164,31 +198,23 @@ public class OrderbookFragment extends Fragment {
 
         List<Entry> entries = new ArrayList<Entry>();
         int x = 0;
-        for (int y = 0; y < asks.length; y++) {
-            if (asks[y] > lowerOutliers && asks[y] < upperOutliers) {
-                entries.add(new Entry(y, (float) asks[x]));
+        for (int y = 0; y < doubleArray.length; y++) {
+            if (doubleArray[y] > lowerOutliers && doubleArray[y] < upperOutliers) {
+                entries.add(new Entry(y, (float) doubleArray[x]));
                 x++;
-
             }
         }
-        LineDataSet dataSet = new LineDataSet(entries, "Asks"); // add entries to dataset
-        dataSet.setColor(RED);
+        LineDataSet dataSet = new LineDataSet(entries, label); // add entries to dataset
+        dataSet.setColor(color);
         dataSet.setDrawFilled(true);
+        dataSet.setFillColor(color);
         dataSet.setDrawCircles(false);
         dataSet.setDrawCircleHole(false);
-        lineChart.getAxisLeft().setAxisMinimum((float) lowerOutliers);
-        lineChart.getAxisLeft().setAxisMaximum((float) upperOutliers);
-        LineData lineData = new LineData(dataSet);
-        lineChart.setData(lineData);
-        lineChart.invalidate(); // refresh
+
+        return dataSet;
     }
 
-    private class CustomComparator implements Comparator<OrderbookItem> {
-        @Override
-        public int compare(OrderbookItem o1, OrderbookItem o2) {
-            return o1.getPrice().compareTo(o2.getPrice());
-        }
-    }
+
     public class Statistics
     {
         double[] data;
@@ -243,5 +269,7 @@ public class OrderbookFragment extends Fragment {
             return v[n];
         }
     }
+
+
 }
 

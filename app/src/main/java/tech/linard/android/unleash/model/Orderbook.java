@@ -35,4 +35,13 @@ public class Orderbook {
     public void setBids(ArrayList<OrderbookItem> bids) {
         this.bids = bids;
     }
+
+    public ArrayList<Double> getPrices(ArrayList<OrderbookItem> items) {
+        ArrayList<Double> prices = new ArrayList<Double>();
+        for (OrderbookItem item : items) {
+            prices.add(item.getPrice());
+        }
+        return prices;
+    }
+
 }
