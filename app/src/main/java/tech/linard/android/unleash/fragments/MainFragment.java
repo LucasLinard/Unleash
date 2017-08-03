@@ -25,6 +25,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import tech.linard.android.unleash.R;
+import tech.linard.android.unleash.Util;
 import tech.linard.android.unleash.data.UnleashContract;
 
 /**
@@ -193,12 +194,12 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
                     data.getDouble(
                             data.getColumnIndex(UnleashContract.TickerEntry.COLUMN_VOL))));
 
-            int dateUnixTime = data.getInt(
-                    data.getColumnIndex(UnleashContract.TickerEntry.COLUMN_DATE));
 
-            Date date = new Date((long) dateUnixTime*1000);
-            String formatedDate = DateFormat.getDateTimeInstance().format(date);
-            mDate.setText(formatedDate);
+
+
+            String readableDate = Util.getReadableDateFromUnixTime(
+                    data.getInt(data.getColumnIndex(UnleashContract.TickerEntry.COLUMN_DATE)));
+            mDate.setText(readableDate);
 
 
         }

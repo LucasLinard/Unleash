@@ -77,7 +77,6 @@ public class TradeFragment extends Fragment {
                     UnleashContract.TradeEntry.COLUMN_DATE,
                     UnleashContract.TradeEntry.COLUMN_TYPE,
                     UnleashContract.TradeEntry._ID};
-            String limit = "LIMIT 20";
 
             Cursor cursor = getActivity().getContentResolver().query(UnleashContract.TradeEntry.CONTENT_URI,
                     columns,

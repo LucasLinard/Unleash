@@ -3,8 +3,11 @@ package tech.linard.android.unleash;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
+import tech.linard.android.unleash.data.UnleashContract;
 import tech.linard.android.unleash.model.Orderbook;
 import tech.linard.android.unleash.model.OrderbookItem;
 import tech.linard.android.unleash.model.Ticker;
@@ -47,5 +50,11 @@ public class Util {
             arrayList.add(new OrderbookItem(price, volume));
         }
         return arrayList;
+    }
+
+    public static String getReadableDateFromUnixTime(int unixTime) {
+        Date date = new Date((long) unixTime*1000);
+        String formatedDate = DateFormat.getDateTimeInstance().format(date);
+        return formatedDate;
     }
 }

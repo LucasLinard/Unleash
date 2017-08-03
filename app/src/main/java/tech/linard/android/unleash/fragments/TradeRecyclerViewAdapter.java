@@ -1,16 +1,22 @@
 package tech.linard.android.unleash.fragments;
 
 import android.database.Cursor;
+import android.icu.text.RelativeDateTimeFormatter;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import tech.linard.android.unleash.R;
+import tech.linard.android.unleash.Util;
 import tech.linard.android.unleash.data.UnleashContract;
 import tech.linard.android.unleash.fragments.TradeFragment.OnListFragmentInteractionListener;
 import tech.linard.android.unleash.model.Trade;
+
+import static android.graphics.Color.GREEN;
+import static android.graphics.Color.RED;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link tech.linard.android.unleash.model.Trade}
@@ -39,10 +45,18 @@ public class TradeRecyclerViewAdapter extends RecyclerView.Adapter<TradeRecycler
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         // populate the list
-//        holder.mItem = mValues.get(position);
         mValues.moveToPosition(position);
         holder.mPreco.setText(String.valueOf(mValues.getDouble(mValues.getColumnIndex(UnleashContract.TradeEntry.COLUMN_PRICE))));
         holder.mQuantidade.setText(String.valueOf(mValues.getDouble(mValues.getColumnIndex(UnleashContract.TradeEntry.COLUMN_AMMOUNT))));
+        String type = String.valueOf(mValues.getString(mValues.getColumnIndex(UnleashContract.TradeEntry.COLUMN_TYPE)));
+        holder.mType.setText(type);
+        if (type.contains("buy")) {
+            holder.mImageView.setColorFilter(GREEN);
+        } else {
+            holder.mImageView.setColorFilter(RED);
+        }
+        String readableDate = Util.getReadableDateFromUnixTime(mValues.getInt(mValues.getColumnIndex(UnleashContract.TradeEntry.COLUMN_DATE)));
+        holder.mTimestamp.setText(readableDate);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,8 +77,11 @@ public class TradeRecyclerViewAdapter extends RecyclerView.Adapter<TradeRecycler
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
+        public final ImageView mImageView;
         public final TextView mPreco;
         public final TextView mQuantidade;
+        public final TextView mTimestamp;
+        public final TextView mType;
         public Trade mItem;
 
         public ViewHolder(View view) {
@@ -72,6 +89,9 @@ public class TradeRecyclerViewAdapter extends RecyclerView.Adapter<TradeRecycler
             mView = view;
             mPreco = (TextView) view.findViewById(R.id.trade_value_valor);
             mQuantidade = (TextView) view.findViewById(R.id.trade_value_quantidade);
+            mImageView = view.findViewById(R.id.trade_icon);
+            mTimestamp = view.findViewById(R.id.trade_timestamp);
+            mType = view.findViewById(R.id.trade_value_type);
         }
     }
 }
