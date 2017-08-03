@@ -39,6 +39,7 @@ import tech.linard.android.unleash.model.OrderbookItem;
 import tech.linard.android.unleash.network.VolleySingleton;
 
 import static android.graphics.Color.GREEN;
+import static android.graphics.Color.RED;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -171,7 +172,7 @@ public class OrderbookFragment extends Fragment {
             }
         }
         LineDataSet dataSet = new LineDataSet(entries, "Asks"); // add entries to dataset
-        dataSet.setColor(GREEN);
+        dataSet.setColor(RED);
         dataSet.setDrawFilled(true);
         dataSet.setDrawCircles(false);
         dataSet.setDrawCircleHole(false);
