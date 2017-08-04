@@ -269,7 +269,5 @@ public class OrderbookFragment extends Fragment {
             return v[n];
         }
     }
-
-
 }
 
