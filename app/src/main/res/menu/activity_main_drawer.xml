@@ -8,11 +8,11 @@
             android:title="Home" />
         <item
             android:id="@+id/orderbook"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/charts"
             android:title="Orders" />
         <item
             android:id="@+id/trade_list"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/list"
             android:title="Trades" />
         <item
             android:id="@+id/nav_manage"

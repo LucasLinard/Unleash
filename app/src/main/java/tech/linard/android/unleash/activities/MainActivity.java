@@ -24,6 +24,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
@@ -53,7 +55,15 @@ public class MainActivity extends BaseActivity
     Fragment mFragmentMain = null;
 
 
+
     // SYNC [START]
+    // Sync interval constants
+    public static final long SECONDS_PER_MINUTE = 60L;
+    public static final long SYNC_INTERVAL_IN_MINUTES = 60L;
+    public static final long SYNC_INTERVAL =
+            SYNC_INTERVAL_IN_MINUTES *
+                    SECONDS_PER_MINUTE;
+
     // Constants
     // The authority for the sync adapter's content provider
     public static final String AUTHORITY = "tech.linard.android.unleash";
@@ -64,6 +74,7 @@ public class MainActivity extends BaseActivity
     // The account name
     public static final String ACCOUNT = "dummyaccount";
 
+
     // Instance fields
     Account mAccount;
 
@@ -73,10 +84,14 @@ public class MainActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         // Create the dummy account
         mAccount = CreateSyncAccount(this);
 
         setContentView(R.layout.activity_main);
+
+
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -90,12 +105,17 @@ public class MainActivity extends BaseActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-//        mFragmentMain = new MainFragment();
-//        FragmentTransaction fragmentTransaction = getSupportFragmentManager()
-//                .beginTransaction();
-//        fragmentTransaction.replace(R.id.fragment, mFragmentMain);
-//        fragmentTransaction.addToBackStack(null);
-//        fragmentTransaction.commit();
+
+        /*
+         * Turn on periodic syncing
+         */
+        ContentResolver.addPeriodicSync(
+                mAccount,
+                AUTHORITY,
+                Bundle.EMPTY,
+                SYNC_INTERVAL);
+
+        syncNow();
 
     }
 
@@ -126,7 +146,6 @@ public class MainActivity extends BaseActivity
              */
         }
         return newAccount;
-
     }
 
     @Override
@@ -164,6 +183,13 @@ public class MainActivity extends BaseActivity
     }
 
     public void onRefreshButtonClick() {
+
+        syncNow();
+
+    }
+
+    private void syncNow() {
+
         // Pass the settings flags by inserting them in a bundle
         Bundle settingsBundle = new Bundle();
         settingsBundle.putBoolean(
@@ -175,6 +201,7 @@ public class MainActivity extends BaseActivity
          * manual sync settings
          */
         ContentResolver.requestSync(mAccount, AUTHORITY, settingsBundle);
+
     }
 
 

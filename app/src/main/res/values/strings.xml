@@ -10,7 +10,6 @@
     <string name="sync_account_type">linard.tech</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="timestamp">TIMESTAMP:</string>
     <string name="sell">Sell:</string>
     <string name="buy">Buy:</string>
@@ -20,4 +19,11 @@
     <string name="label_vol">Volume negociado(24h):</string>
     <string name="preco">Preço:</string>
     <string name="quantidade">Quantidade:</string>
+    <string name="appwidget_text">Bitcoin Price</string>
+    <string name="add_widget">Add widget</string>
+    <string name="last_price">Última negociação:</string>
+
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="buy_operation">buy operation</string>
+    <string name="sell_operation">sell operation</string>
 </resources>

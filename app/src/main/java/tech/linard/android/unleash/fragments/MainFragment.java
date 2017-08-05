@@ -17,6 +17,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -46,6 +49,8 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
     private TextView mSell;
     private TextView mDate;
     private TextView mVol;
+
+    private AdView mAdView;
 
 
     private static final int TICKER_LOADER = 0;
@@ -136,6 +141,11 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
         mDate = getActivity().findViewById(R.id.value_timestamp);
         mVol  = getActivity().findViewById(R.id.value_vol);
         mLast = getActivity().findViewById(R.id.value_last);
+
+        // AdMob
+        mAdView = (AdView) getActivity().findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
     }
 

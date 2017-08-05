@@ -52,8 +52,10 @@ public class TradeRecyclerViewAdapter extends RecyclerView.Adapter<TradeRecycler
         holder.mType.setText(type);
         if (type.contains("buy")) {
             holder.mImageView.setColorFilter(GREEN);
+            holder.mType.setHint(tech.linard.android.unleash.R.string.buy_operation);
         } else {
             holder.mImageView.setColorFilter(RED);
+            holder.mType.setHint(tech.linard.android.unleash.R.string.sell_operation);
         }
         String readableDate = Util.getReadableDateFromUnixTime(mValues.getInt(mValues.getColumnIndex(UnleashContract.TradeEntry.COLUMN_DATE)));
         holder.mTimestamp.setText(readableDate);
