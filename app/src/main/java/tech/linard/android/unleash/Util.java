@@ -7,7 +7,6 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import tech.linard.android.unleash.data.UnleashContract;
 import tech.linard.android.unleash.model.Orderbook;
 import tech.linard.android.unleash.model.OrderbookItem;
 import tech.linard.android.unleash.model.Ticker;
@@ -30,6 +29,8 @@ public class Util {
 
         return currentTicker;
     }
+
+
 
     public static Orderbook orderbookFromJSon(JSONObject response) {
         Orderbook orderbook = new Orderbook();

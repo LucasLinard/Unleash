@@ -5,10 +5,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -26,13 +26,12 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import tech.linard.android.unleash.R;
 import tech.linard.android.unleash.Util;
+import tech.linard.android.unleash.activities.MainActivity;
 import tech.linard.android.unleash.model.Orderbook;
-import tech.linard.android.unleash.model.OrderbookItem;
 import tech.linard.android.unleash.network.VolleySingleton;
 
 import static android.graphics.Color.GREEN;
@@ -49,6 +48,7 @@ public class OrderbookFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private ArrayList<Double> mAskPrices = null;
     private ArrayList<Double> mBidPrices = null;
+    LineChart mChart;
     public OrderbookFragment() {
         // Required empty public constructor
     }
@@ -57,6 +57,7 @@ public class OrderbookFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+         mChart = getActivity().findViewById(R.id.chart);
         fetchOrderbookFromNetwork();
 
     }
@@ -138,7 +139,7 @@ public class OrderbookFragment extends Fragment {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                Log.e("Orderbook", "Volley on response error!");
             }
         });
 
@@ -146,43 +147,45 @@ public class OrderbookFragment extends Fragment {
     }
 
     private void fillGraphic() {
-        LineChart mChart = (LineChart) getActivity().findViewById(R.id.chart);
-        mChart.setDrawGridBackground(false);
-        mChart.getDescription().setEnabled(false);
-        mChart.setDrawBorders(false);
+        if (mChart != null) {
+            mChart.setDrawGridBackground(false);
+            mChart.getDescription().setEnabled(false);
+            mChart.setDrawBorders(false);
 
-        mChart.getAxisLeft().setEnabled(false);
-        mChart.getAxisRight().setDrawAxisLine(false);
-        mChart.getAxisRight().setDrawGridLines(false);
-        mChart.getXAxis().setDrawAxisLine(false);
-        mChart.getXAxis().setDrawGridLines(false);
+            mChart.getAxisLeft().setEnabled(false);
+            mChart.getAxisRight().setDrawAxisLine(false);
+            mChart.getAxisRight().setDrawGridLines(false);
+            mChart.getXAxis().setDrawAxisLine(false);
+            mChart.getXAxis().setDrawGridLines(false);
 
-        // enable touch gestures
-        mChart.setTouchEnabled(true);
+            // enable touch gestures
+            mChart.setTouchEnabled(true);
 
-        // enable scaling and dragging
-        mChart.setDragEnabled(true);
-        mChart.setScaleEnabled(true);
+            // enable scaling and dragging
+            mChart.setDragEnabled(true);
+            mChart.setScaleEnabled(true);
 
-        // if disabled, scaling can be done on x- and y-axis separately
-        mChart.setPinchZoom(false);
+            // if disabled, scaling can be done on x- and y-axis separately
+            mChart.setPinchZoom(false);
 
-        Legend l = mChart.getLegend();
-        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-        l.setOrientation(Legend.LegendOrientation.VERTICAL);
-        l.setDrawInside(false);
+            Legend l = mChart.getLegend();
+            l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+            l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+            l.setOrientation(Legend.LegendOrientation.VERTICAL);
+            l.setDrawInside(false);
 
 
-        double[] asks = populateDoubleArray(mAskPrices);
-        double[] bids = populateDoubleArray(mBidPrices);
-        ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
-        dataSets.add(generateLineDataSet(asks, "asks", RED));
-        dataSets.add(generateLineDataSet(bids, "bids", GREEN));
+            double[] asks = populateDoubleArray(mAskPrices);
+            double[] bids = populateDoubleArray(mBidPrices);
+            ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+            dataSets.add(generateLineDataSet(asks, "asks", RED));
+            dataSets.add(generateLineDataSet(bids, "bids", GREEN));
 
-        LineData data = new LineData(dataSets);
-        mChart.setData(data);
-        mChart.invalidate();
+            LineData data = new LineData(dataSets);
+            mChart.setData(data);
+            mChart.invalidate();
+
+        }
 
     }
 

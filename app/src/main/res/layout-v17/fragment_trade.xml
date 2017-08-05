@@ -34,9 +34,9 @@
         tools:layout_conversion_absoluteWidth="26dp"
         tools:layout_conversion_absoluteHeight="16dp"
         android:id="@+id/trade_value_type"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         app:layout_constraintLeft_toLeftOf="@+id/trade_icon"
-        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp"
         app:layout_constraintRight_toRightOf="@+id/trade_icon"
         app:layout_constraintHorizontal_bias="0.0"
         android:layout_marginTop="8dp"
@@ -54,7 +54,7 @@
         tools:layout_conversion_absoluteWidth="45dp"
         tools:layout_conversion_absoluteHeight="19dp"
         app:layout_constraintLeft_toRightOf="@+id/trade_icon"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         app:layout_constraintTop_toTopOf="@+id/trade_icon"
         android:layout_marginTop="8dp" />
 
@@ -68,7 +68,7 @@
         tools:layout_conversion_absoluteWidth="45dp"
         tools:layout_conversion_absoluteHeight="19dp"
         app:layout_constraintLeft_toRightOf="@+id/trade_label_valor"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         app:layout_constraintTop_toTopOf="@+id/trade_label_valor"
         android:layout_marginTop="0dp" />
 
@@ -84,7 +84,7 @@
         tools:layout_conversion_absoluteWidth="85dp"
         tools:layout_conversion_absoluteHeight="19dp"
         app:layout_constraintLeft_toRightOf="@+id/trade_icon"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/trade_value_type"
         android:layout_marginTop="0dp"
@@ -100,7 +100,7 @@
         tools:layout_conversion_absoluteWidth="85dp"
         tools:layout_conversion_absoluteHeight="19dp"
         app:layout_constraintLeft_toRightOf="@+id/trade_label_quantidade"
-        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
         app:layout_constraintTop_toTopOf="@+id/trade_label_quantidade"
         android:layout_marginTop="-4dp" />
 
@@ -117,6 +117,6 @@
         android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@+id/trade_label_quantidade"
         app:layout_constraintLeft_toRightOf="@+id/trade_icon"
-        android:layout_marginLeft="8dp" />
+        android:layout_marginStart="8dp" />
 
 </android.support.constraint.ConstraintLayout>

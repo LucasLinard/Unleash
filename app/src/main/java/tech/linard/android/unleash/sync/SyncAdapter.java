@@ -9,11 +9,7 @@ import android.content.Context;
 import android.content.SyncResult;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
 
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.RequestFuture;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
@@ -24,14 +20,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Vector;
-import java.util.concurrent.ExecutionException;
 
-import tech.linard.android.unleash.R;
 import tech.linard.android.unleash.Util;
-import tech.linard.android.unleash.activities.MainActivity;
 import tech.linard.android.unleash.data.UnleashContract;
 import tech.linard.android.unleash.model.Ticker;
-import tech.linard.android.unleash.network.VolleySingleton;
 
 /**
  * Created by llinard on 10/07/17.

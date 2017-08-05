@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.widget.RemoteViews;
 
 import tech.linard.android.unleash.R;
+import tech.linard.android.unleash.Util;
 import tech.linard.android.unleash.activities.MainActivity;
 import tech.linard.android.unleash.data.UnleashContract;
 
@@ -36,6 +37,9 @@ public class StockWidget extends AppWidgetProvider {
                 sortOrder);
 
         cursor.moveToFirst();
+        int timestamp = cursor.getInt(cursor.getColumnIndex(UnleashContract.TradeEntry.COLUMN_DATE));
+        String txtTimestamp = Util.getReadableDateFromUnixTime(timestamp);
+
         String priceText = "R$ " + String.valueOf(
                 cursor.getInt(cursor.getColumnIndex(UnleashContract.TradeEntry.COLUMN_PRICE)));
 
@@ -43,6 +47,7 @@ public class StockWidget extends AppWidgetProvider {
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.stock_widget);
         views.setTextViewText(R.id.appwidget_text, widgetText);
+        views.setTextViewText(R.id.widget_timestamp, txtTimestamp);
         // Create intent to launch MainActivity
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);

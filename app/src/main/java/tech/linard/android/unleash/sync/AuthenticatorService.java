@@ -4,8 +4,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
-import tech.linard.android.unleash.sync.Authenticator;
-
 public class AuthenticatorService extends Service {
 
     private Authenticator mAuthenticator;

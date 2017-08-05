@@ -4,17 +4,16 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
-    <string name="action_refresh">refresh</string>
+    <string name="action_settings">Configurações</string>
+    <string name="action_refresh">Atualizar</string>
     <string name="content_authority" translatable="false">tech.linard.android.unleash</string>
     <string name="sync_account_type">linard.tech</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="timestamp">TIMESTAMP:</string>
-    <string name="sell">Sell:</string>
-    <string name="buy">Buy:</string>
-    <string name="low">Low:</string>
-    <string name="high">High:</string>
+    <string name="sell">Venda:</string>
+    <string name="buy">Compra:</string>
+    <string name="low">Mínimo:</string>
+    <string name="high">Máximo:</string>
     <string name="last_txt">Preço unitário do último negócio</string>
     <string name="label_vol">Volume negociado(24h):</string>
     <string name="preco">Preço:</string>
@@ -26,4 +25,41 @@
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="buy_operation">buy operation</string>
     <string name="sell_operation">sell operation</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+
+
+    <!-- Example settings for Data & Sync -->
+    <string name="pref_header_data_sync">Data &amp; sync</string>
+
+    <string name="pref_title_sync_frequency">Sync frequency</string>
+    <string name="ticker">Ticker</string>
+    <string name="orderbook">Orderbook</string>
+    <string name="negociacoes">Negociações</string>
+    <string name="confiiguracao">Configuração</string>
+    <string name="compartilhar">Compartilhar</string>
+    <string name="enviar_cotacao">Enviar cotação</string>
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>Never</item>
+    </string-array>
+
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>-1</item>
+    </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -1,7 +1,6 @@
 package tech.linard.android.unleash.fragments;
 
 import android.database.Cursor;
-import android.icu.text.RelativeDateTimeFormatter;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -89,8 +88,8 @@ public class TradeRecyclerViewAdapter extends RecyclerView.Adapter<TradeRecycler
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mPreco = (TextView) view.findViewById(R.id.trade_value_valor);
-            mQuantidade = (TextView) view.findViewById(R.id.trade_value_quantidade);
+            mPreco = view.findViewById(R.id.trade_value_valor);
+            mQuantidade = view.findViewById(R.id.trade_value_quantidade);
             mImageView = view.findViewById(R.id.trade_icon);
             mTimestamp = view.findViewById(R.id.trade_timestamp);
             mType = view.findViewById(R.id.trade_value_type);

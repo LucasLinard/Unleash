@@ -1,7 +1,5 @@
 package tech.linard.android.unleash.model;
 
-import java.math.BigDecimal;
-
 /**
  * Created by llinard on 08/07/17.
  */

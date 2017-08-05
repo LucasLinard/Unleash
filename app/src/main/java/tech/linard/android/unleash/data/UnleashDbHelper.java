@@ -3,7 +3,9 @@ package tech.linard.android.unleash.data;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import tech.linard.android.unleash.data.UnleashContract.*;
+
+import tech.linard.android.unleash.data.UnleashContract.TickerEntry;
+import tech.linard.android.unleash.data.UnleashContract.TradeEntry;
 /**
  * Created by llinard on 07/07/17.
  */

@@ -4,47 +4,35 @@ package tech.linard.android.unleash.activities;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
+import android.support.transition.Fade;
+import android.support.transition.TransitionSet;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.transition.TransitionInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.gson.JsonObject;
-import com.koushikdutta.async.future.FutureCallback;
-import com.koushikdutta.ion.Ion;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.Vector;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import tech.linard.android.unleash.R;
-import tech.linard.android.unleash.Util;
-import tech.linard.android.unleash.data.UnleashContract;
-import tech.linard.android.unleash.data.UnleashContract.TickerEntry;
 import tech.linard.android.unleash.fragments.MainFragment;
 import tech.linard.android.unleash.fragments.OrderbookFragment;
 import tech.linard.android.unleash.fragments.TradeFragment;
-import tech.linard.android.unleash.model.Ticker;
+import tech.linard.android.unleash.fragments.WelcomeFragment;
 import tech.linard.android.unleash.model.Trade;
-import tech.linard.android.unleash.network.VolleySingleton;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -52,17 +40,19 @@ public class MainActivity extends BaseActivity
         OrderbookFragment.OnFragmentInteractionListener,
         TradeFragment.OnListFragmentInteractionListener {
 
-    Fragment mFragmentMain = null;
+    Fragment mFragmentNew = null;
+    Fragment mFragmentOld = null;
+    Fragment mFragmentWelcome = null;
 
-
+    private static final long MOVE_DEFAULT_TIME = 1000;
+    private static final long FADE_DEFAULT_TIME = 300;
+    
 
     // SYNC [START]
     // Sync interval constants
     public static final long SECONDS_PER_MINUTE = 60L;
     public static final long SYNC_INTERVAL_IN_MINUTES = 60L;
-    public static final long SYNC_INTERVAL =
-            SYNC_INTERVAL_IN_MINUTES *
-                    SECONDS_PER_MINUTE;
+
 
     // Constants
     // The authority for the sync adapter's content provider
@@ -80,6 +70,14 @@ public class MainActivity extends BaseActivity
 
     // SYNC [END]
 
+    int fragmentId = 0;
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt("fragmentId", fragmentId);
+        super.onSaveInstanceState(outState);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,9 +87,6 @@ public class MainActivity extends BaseActivity
         mAccount = CreateSyncAccount(this);
 
         setContentView(R.layout.activity_main);
-
-
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -105,17 +100,46 @@ public class MainActivity extends BaseActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String interval = prefs.getString("sync_frequency", "180");
 
-        /*
-         * Turn on periodic syncing
-         */
-        ContentResolver.addPeriodicSync(
-                mAccount,
-                AUTHORITY,
-                Bundle.EMPTY,
-                SYNC_INTERVAL);
+        if (Long.valueOf(interval) > 0) {
 
+            /*
+             * Turn on periodic syncing
+             */
+
+            long SYNC_INTERVAL =
+                    Long.valueOf(interval) *
+                            SECONDS_PER_MINUTE;
+
+            ContentResolver.addPeriodicSync(
+                    mAccount,
+                    AUTHORITY,
+                    Bundle.EMPTY,
+                    SYNC_INTERVAL);
+        }
         syncNow();
+        mFragmentWelcome = new WelcomeFragment();
+        if (!networkUp()) {
+            //  não possui conexão.
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager()
+                    .beginTransaction();
+            fragmentTransaction.replace(R.id.fragment, mFragmentWelcome);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+        } else {
+            // Possui conexão
+            if (savedInstanceState != null) {
+                // estamos recriando uma activity
+                int currentFragmentId =  savedInstanceState.getInt("fragmentId");
+                handleItemClick(currentFragmentId);
+                changeFragment();
+            } else {
+                handleItemClick(R.id.nav_home);
+                changeFragment();
+            }
+        }
 
     }
 
@@ -188,6 +212,14 @@ public class MainActivity extends BaseActivity
 
     }
 
+
+    private boolean networkUp() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnectedOrConnecting();
+    }
+
     private void syncNow() {
 
         // Pass the settings flags by inserting them in a bundle
@@ -209,37 +241,93 @@ public class MainActivity extends BaseActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
+        int itemId = item.getItemId();
+        String itemName = null;
+        String contentType = "nav_option";
 
         // Handle navigation view item clicks here.
-        switch (item.getItemId()) {
-            case R.id.nav_home:
-                mFragmentMain = new MainFragment();
-                break;
-            case R.id.orderbook:
-                mFragmentMain = new OrderbookFragment();
-                break;
-            case R.id.trade_list:
-                mFragmentMain = new TradeFragment();
-                break;
-            case R.id.nav_manage:
-                break;
-            case R.id.nav_share:
-                break;
-            case R.id.nav_send:
-                break;
-        }
+        itemName = handleItemClick(item.getItemId());
 
-        if (mFragmentMain != null) {
+        changeFragment();
+
+
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+
+
+        logData(itemId, itemName, contentType);
+        return true;
+    }
+
+    private void changeFragment() {
+
+        if (mFragmentNew != null && networkUp()) {
+
             FragmentTransaction fragmentTransaction = getSupportFragmentManager()
                     .beginTransaction();
-            fragmentTransaction.replace(R.id.fragment, mFragmentMain);
+            if (mFragmentOld == null) {
+                mFragmentOld = new WelcomeFragment();
+            }
+            fragmentTransaction.setCustomAnimations(android.R.anim.fade_out,android.R.anim.fade_in);
+
+            fragmentTransaction.replace(R.id.fragment, mFragmentNew);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+        } else {
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager()
+                    .beginTransaction();
+            fragmentTransaction.replace(R.id.fragment, mFragmentWelcome);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+
+    }
+
+    private String handleItemClick(int itemId) {
+        String itemName = null;
+        mFragmentOld = mFragmentNew;
+        switch (itemId) {
+            case R.id.nav_home:
+                fragmentId = R.id.nav_home;
+                mFragmentNew = new MainFragment();
+                itemName = getResources().getString(R.string.ticker);
+                break;
+            case R.id.orderbook:
+                fragmentId = R.id.orderbook;
+                mFragmentNew = new OrderbookFragment();
+                itemName = getResources().getString(R.string.orderbook);
+                break;
+            case R.id.trade_list:
+                fragmentId = R.id.trade_list;
+                mFragmentNew = new TradeFragment();
+                itemName = getResources().getString(R.string.negociacoes);
+                break;
+            case R.id.nav_manage:
+                fragmentId = R.id.nav_manage;
+                Intent settingsIntent = new Intent(this, SettingsActivity.class);
+                startActivity(settingsIntent);
+                itemName = getResources().getString(R.string.confiiguracao);
+                break;
+            case R.id.nav_share:
+                fragmentId = R.id.nav_share;
+                itemName = getResources().getString(R.string.compartilhar);
+                break;
+            case R.id.nav_send:
+                fragmentId = R.id.nav_send;
+                itemName = getResources().getString(R.string.enviar_cotacao);
+                break;
+        }
+        return itemName;
+    }
+
+    private void logData(int itemId, String itemName, String contentType) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(FirebaseAnalytics.Param.ITEM_ID, itemId);
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, itemName);
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, contentType);
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
     }
 
     @Override
