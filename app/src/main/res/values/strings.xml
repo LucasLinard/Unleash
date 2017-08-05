@@ -6,10 +6,7 @@
 
     <string name="action_settings">Configurações</string>
     <string name="action_refresh">Atualizar</string>
-    <string name="content_authority" translatable="false">tech.linard.android.unleash</string>
-    <string name="sync_account_type">linard.tech</string>
 
-    <string name="timestamp">TIMESTAMP:</string>
     <string name="sell">Venda:</string>
     <string name="buy">Compra:</string>
     <string name="low">Mínimo:</string>
@@ -19,8 +16,6 @@
     <string name="preco">Preço:</string>
     <string name="quantidade">Quantidade:</string>
     <string name="appwidget_text">Bitcoin Price</string>
-    <string name="add_widget">Add widget</string>
-    <string name="last_price">Última negociação:</string>
 
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="buy_operation">buy operation</string>
@@ -61,5 +56,7 @@
     </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="acesso_internet">Parece que você está sem acesso a internet.</string>
+    <string name="txt_acesso_cotacoes">Este aplicativo precisa conectar-se a um serviço na internet para obter cotações</string>
+    <string name="txt_erro">Oops!</string>
 </resources>
