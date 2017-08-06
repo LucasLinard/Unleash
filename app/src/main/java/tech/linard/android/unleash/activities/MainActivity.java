@@ -7,27 +7,28 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
-import android.support.transition.Fade;
-import android.support.transition.TransitionSet;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
-import android.transition.TransitionInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import tech.linard.android.unleash.R;
+import tech.linard.android.unleash.Util;
+import tech.linard.android.unleash.data.UnleashContract;
 import tech.linard.android.unleash.fragments.MainFragment;
 import tech.linard.android.unleash.fragments.OrderbookFragment;
 import tech.linard.android.unleash.fragments.TradeFragment;
@@ -71,6 +72,9 @@ public class MainActivity extends BaseActivity
     // SYNC [END]
 
     int fragmentId = 0;
+
+
+    private ShareActionProvider mShareActionProvider;
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -121,6 +125,8 @@ public class MainActivity extends BaseActivity
         }
         syncNow();
         mFragmentWelcome = new WelcomeFragment();
+
+
         if (!networkUp()) {
             //  não possui conexão.
             FragmentTransaction fragmentTransaction = getSupportFragmentManager()
@@ -197,7 +203,7 @@ public class MainActivity extends BaseActivity
 
         switch (item.getItemId()) {
             case R.id.action_settings:
-
+                startPreferenceActivity();
                 break;
             case R.id.action_refresh:
                 onRefreshButtonClick();
@@ -250,8 +256,6 @@ public class MainActivity extends BaseActivity
 
         changeFragment();
 
-
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
 
@@ -269,7 +273,7 @@ public class MainActivity extends BaseActivity
             if (mFragmentOld == null) {
                 mFragmentOld = new WelcomeFragment();
             }
-            fragmentTransaction.setCustomAnimations(android.R.anim.fade_out,android.R.anim.fade_in);
+            fragmentTransaction.setCustomAnimations(android.R.anim.fade_out, android.R.anim.fade_in);
 
             fragmentTransaction.replace(R.id.fragment, mFragmentNew);
             fragmentTransaction.addToBackStack(null);
@@ -306,20 +310,48 @@ public class MainActivity extends BaseActivity
                 break;
             case R.id.nav_manage:
                 fragmentId = R.id.nav_manage;
-                Intent settingsIntent = new Intent(this, SettingsActivity.class);
-                startActivity(settingsIntent);
+                startPreferenceActivity();
+
                 itemName = getResources().getString(R.string.confiiguracao);
-                break;
-            case R.id.nav_share:
-                fragmentId = R.id.nav_share;
-                itemName = getResources().getString(R.string.compartilhar);
                 break;
             case R.id.nav_send:
                 fragmentId = R.id.nav_send;
                 itemName = getResources().getString(R.string.enviar_cotacao);
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                String shareText = fetchQuoteFromContentProvider();
+                sendIntent.putExtra(Intent.EXTRA_TEXT, shareText );
+                sendIntent.setType("text/plain");
+                startActivity(sendIntent);
                 break;
         }
         return itemName;
+    }
+
+    private void startPreferenceActivity() {
+        Intent settingsIntent = new Intent(this, SettingsActivity.class);
+        startActivity(settingsIntent);
+    }
+
+    private String fetchQuoteFromContentProvider() {
+        String sortOrder = UnleashContract.TickerEntry.COLUMN_DATE + " DESC";
+
+        String[] columns = {UnleashContract.TickerEntry.COLUMN_LAST
+                , UnleashContract.TickerEntry.COLUMN_DATE};
+
+        Cursor cursor = getContentResolver().query(UnleashContract.TickerEntry.CONTENT_URI,
+                columns,
+                null,
+                null,
+                sortOrder);
+
+        cursor.moveToFirst();
+        String price = cursor.getString(cursor.getColumnIndex(UnleashContract.TickerEntry.COLUMN_LAST));
+        int time = cursor.getInt(cursor.getColumnIndex(UnleashContract.TickerEntry.COLUMN_DATE));
+        String timestamp = Util.getReadableDateFromUnixTime(time);
+
+        return "Unleash Bitcoin: Última transação no Mercado Bitcoin a R$: " + price
+                + " por Bitcoin. " + timestamp;
     }
 
     private void logData(int itemId, String itemName, String contentType) {

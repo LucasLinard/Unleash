@@ -23,11 +23,8 @@
     <item android:title="Communicate">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="@string/compartilhar" />
-            <item
                 android:id="@+id/nav_send"
+                android:actionProviderClass="android.widget.ShareActionProvider"
                 android:icon="@drawable/ic_menu_send"
                 android:title="@string/enviar_cotacao" />
         </menu>

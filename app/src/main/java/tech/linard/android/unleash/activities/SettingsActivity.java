@@ -93,9 +93,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                         .getDefaultSharedPreferences(preference.getContext())
                         .getString(preference.getKey(), ""));
 
-
-
-
     }
 
     @Override
