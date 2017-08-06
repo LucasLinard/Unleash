@@ -1,5 +1,6 @@
 package tech.linard.android.unleash.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -16,8 +17,6 @@ import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-
-import java.util.Date;
 
 import tech.linard.android.unleash.R;
 import tech.linard.android.unleash.Util;
@@ -179,24 +178,25 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
                 sortOrder);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data != null && data.moveToFirst()) {
 
             double lastValue = data.getDouble(
                     data.getColumnIndex(UnleashContract.TickerEntry.COLUMN_LAST));
-            mLast.setText("R$ " + String.valueOf(lastValue));
+            mLast.setText(getString(R.string.real_brasileiro) + String.valueOf(lastValue));
 
-            mBuy.setText("R$ " + String.valueOf(data.getDouble(
+            mBuy.setText(getString(R.string.real_brasileiro) + String.valueOf(data.getDouble(
                             data.getColumnIndex(UnleashContract.TickerEntry.COLUMN_BUY))));
-            mSell.setText("R$ " + String.valueOf(data.getDouble(
+            mSell.setText(getString(R.string.real_brasileiro) + String.valueOf(data.getDouble(
                             data.getColumnIndex(UnleashContract.TickerEntry.COLUMN_SELL))));
-            mHigh.setText("R$ " + String.valueOf(data.getDouble(
+            mHigh.setText(getString(R.string.real_brasileiro) + String.valueOf(data.getDouble(
                             data.getColumnIndex(UnleashContract.TickerEntry.COLUMN_HIGH))));
-            mLow.setText("R$ " + String.valueOf(data.getDouble(
+            mLow.setText(getString(R.string.real_brasileiro) + String.valueOf(data.getDouble(
                             data.getColumnIndex(UnleashContract.TickerEntry.COLUMN_LOW))));
 
-            mVol.setText("BTC: " + String.valueOf(
+            mVol.setText(getString(R.string.btc) + String.valueOf(
                     data.getDouble(
                             data.getColumnIndex(UnleashContract.TickerEntry.COLUMN_VOL))));
             int timestamp = data.getInt(data.getColumnIndex(UnleashContract.TickerEntry.COLUMN_DATE));

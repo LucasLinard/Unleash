@@ -63,27 +63,29 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     @Override
                     public void onCompleted(Exception e, JsonObject result) {
 
-                        String string = result.toString();
-                        try {
-                            JSONObject jsonObject = new JSONObject(string);
-                            Ticker ticker = Util.tickerFromJSon(jsonObject.optJSONObject("ticker"));
+                        if (result != null) {
+                            try {
+                                String string = result.toString();
+                                JSONObject jsonObject = new JSONObject(string);
+                                Ticker ticker = Util.tickerFromJSon(jsonObject.optJSONObject("ticker"));
 
-                            ContentValues contentValues = new ContentValues();
-                            contentValues.put(UnleashContract.TickerEntry.COLUMN_HIGH, ticker.getHigh());
-                            contentValues.put(UnleashContract.TickerEntry.COLUMN_LOW, ticker.getLow());
-                            contentValues.put(UnleashContract.TickerEntry.COLUMN_BUY, ticker.getBuy());
-                            contentValues.put(UnleashContract.TickerEntry.COLUMN_SELL, ticker.getSell());
-                            contentValues.put(UnleashContract.TickerEntry.COLUMN_LAST, ticker.getLast());
-                            contentValues.put(UnleashContract.TickerEntry.COLUMN_VOL, ticker.getVol());
-                            contentValues.put(UnleashContract.TickerEntry.COLUMN_DATE, ticker.getDate());
+                                ContentValues contentValues = new ContentValues();
+                                contentValues.put(UnleashContract.TickerEntry.COLUMN_HIGH, ticker.getHigh());
+                                contentValues.put(UnleashContract.TickerEntry.COLUMN_LOW, ticker.getLow());
+                                contentValues.put(UnleashContract.TickerEntry.COLUMN_BUY, ticker.getBuy());
+                                contentValues.put(UnleashContract.TickerEntry.COLUMN_SELL, ticker.getSell());
+                                contentValues.put(UnleashContract.TickerEntry.COLUMN_LAST, ticker.getLast());
+                                contentValues.put(UnleashContract.TickerEntry.COLUMN_VOL, ticker.getVol());
+                                contentValues.put(UnleashContract.TickerEntry.COLUMN_DATE, ticker.getDate());
 
-                            Uri newUri = mContentResolver
-                                    .insert(UnleashContract.TickerEntry.CONTENT_URI, contentValues);
-                            mContentResolver.notifyChange(UnleashContract.TickerEntry.CONTENT_URI, null);
-                        } catch (JSONException e1) {
-                            e1.printStackTrace();
+                                Uri newUri = mContentResolver
+                                        .insert(UnleashContract.TickerEntry.CONTENT_URI, contentValues);
+                                mContentResolver.notifyChange(UnleashContract.TickerEntry.CONTENT_URI, null);
+                            } catch (JSONException e1) {
+                                e1.printStackTrace();
+                            }
+
                         }
-
                     }
                 });
 

@@ -30,7 +30,6 @@ import java.util.List;
 
 import tech.linard.android.unleash.R;
 import tech.linard.android.unleash.Util;
-import tech.linard.android.unleash.activities.MainActivity;
 import tech.linard.android.unleash.model.Orderbook;
 import tech.linard.android.unleash.network.VolleySingleton;
 

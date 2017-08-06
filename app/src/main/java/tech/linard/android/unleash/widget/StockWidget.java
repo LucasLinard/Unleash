@@ -43,10 +43,10 @@ public class StockWidget extends AppWidgetProvider {
         String priceText = "R$ " + String.valueOf(
                 cursor.getInt(cursor.getColumnIndex(UnleashContract.TradeEntry.COLUMN_PRICE)));
 
-        CharSequence widgetText = priceText;
+        //        CharSequence widgetText = priceText;
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.stock_widget);
-        views.setTextViewText(R.id.appwidget_text, widgetText);
+        views.setTextViewText(R.id.appwidget_text, priceText);
         views.setTextViewText(R.id.widget_timestamp, txtTimestamp);
         // Create intent to launch MainActivity
         Intent intent = new Intent(context, MainActivity.class);

@@ -59,4 +59,8 @@
     <string name="acesso_internet">Parece que você está sem acesso a internet.</string>
     <string name="txt_acesso_cotacoes">Este aplicativo precisa conectar-se a um serviço na internet para obter cotações</string>
     <string name="txt_erro">Oops!</string>
+    <string name="communicate">Compartilhar</string>
+    <string name="unleash_bitcoin_tracker">Unleash Bitcoin Tracker</string>
+    <string name="btc">BTC:</string>
+    <string name="real_brasileiro">R$</string>
 </resources>
