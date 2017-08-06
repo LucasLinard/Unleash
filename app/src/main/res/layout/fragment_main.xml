@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <TextView
+            android:padding="8dp"
             android:id="@+id/label_last"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -19,13 +20,18 @@
 
         <TextView
             android:id="@+id/value_last"
+            android:textSize="34sp"
+            android:layout_margin="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:textColor="@color/primary_light"
+            android:background="@color/background"
             android:textAppearance="@style/Display1"
             tools:text="R$ 9.999,00" />
 
             <TextView
+                android:padding="8dp"
                 android:id="@+id/value_timestamp"
                 android:text="22/07/2017 13:00"
                 android:layout_width="wrap_content"
@@ -36,11 +42,13 @@
             android:layout_height="wrap_content">
 
             <TextView
+                android:padding="8dp"
                 android:id="@+id/label_volume"
                 android:text="@string/label_vol"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
+                android:padding="8dp"
                 android:id="@+id/value_vol"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -52,12 +60,14 @@
             android:layout_height="wrap_content">
 
             <TextView
+                android:padding="8dp"
                 android:id="@+id/label_high"
                 android:text="@string/high"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <TextView
+                android:padding="8dp"
                 android:id="@+id/value_high"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -69,11 +79,13 @@
             android:layout_height="wrap_content">
 
             <TextView
+                android:padding="8dp"
                 android:id="@+id/label_low"
                 android:text="@string/low"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
+                android:padding="8dp"
                 android:id="@+id/value_low"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -85,11 +97,13 @@
             android:layout_height="wrap_content">
 
             <TextView
+                android:padding="8dp"
                 android:id="@+id/label_buy"
                 android:text="@string/buy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
+                android:padding="8dp"
                 android:id="@+id/value_buy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -102,11 +116,13 @@
             android:layout_height="wrap_content">
 
             <TextView
+                android:padding="8dp"
                 android:id="@+id/label_sell"
                 android:text="@string/sell"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
+                android:padding="8dp"
                 android:id="@+id/value_sell"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />

@@ -17,9 +17,14 @@ import android.widget.TextView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
+import java.util.Date;
+
 import tech.linard.android.unleash.R;
 import tech.linard.android.unleash.Util;
 import tech.linard.android.unleash.data.UnleashContract;
+
+import static android.graphics.Color.GREEN;
+import static android.graphics.Color.RED;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -178,8 +183,9 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data != null && data.moveToFirst()) {
 
-            mLast.setText("R$ " + String.valueOf(data.getDouble(
-                            data.getColumnIndex(UnleashContract.TickerEntry.COLUMN_LAST))));
+            double lastValue = data.getDouble(
+                    data.getColumnIndex(UnleashContract.TickerEntry.COLUMN_LAST));
+            mLast.setText("R$ " + String.valueOf(lastValue));
 
             mBuy.setText("R$ " + String.valueOf(data.getDouble(
                             data.getColumnIndex(UnleashContract.TickerEntry.COLUMN_BUY))));
@@ -193,15 +199,39 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
             mVol.setText("BTC: " + String.valueOf(
                     data.getDouble(
                             data.getColumnIndex(UnleashContract.TickerEntry.COLUMN_VOL))));
-
-
-
-
-            String readableDate = Util.getReadableDateFromUnixTime(
-                    data.getInt(data.getColumnIndex(UnleashContract.TickerEntry.COLUMN_DATE)));
+            int timestamp = data.getInt(data.getColumnIndex(UnleashContract.TickerEntry.COLUMN_DATE));
+            String readableDate = Util.getReadableDateFromUnixTime(timestamp);
             mDate.setText(readableDate);
 
+            int yesterdayTime = timestamp - (24 * 3600);
+            String arg = String.valueOf(yesterdayTime);
 
+            String sortOrder = UnleashContract.TickerEntry.COLUMN_DATE + " ASC";
+
+            String[] columns = {UnleashContract.TickerEntry.COLUMN_LAST
+                    , UnleashContract.TickerEntry.COLUMN_DATE};
+
+            String selection = UnleashContract.TickerEntry.COLUMN_DATE + " > ?";
+            String[] selectionArgs = {arg};
+
+            Cursor cursorYesterday = getActivity().getContentResolver()
+                    .query(UnleashContract.TickerEntry.CONTENT_URI,
+                    columns,
+                    selection,
+                    selectionArgs,
+                    sortOrder);
+
+            if (cursorYesterday.moveToFirst() && yesterdayTime < timestamp ) {
+                double yesterdayLastValue = cursorYesterday.
+                        getDouble(cursorYesterday.getColumnIndex(
+                                UnleashContract.TickerEntry.COLUMN_LAST));
+
+                if (yesterdayLastValue > lastValue) {
+                    mLast.setTextColor(RED);
+                } else {
+                    mLast.setTextColor(GREEN);
+                }
+            }
         }
     }
 
