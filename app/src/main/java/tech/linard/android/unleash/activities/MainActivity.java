@@ -1,6 +1,5 @@
 package tech.linard.android.unleash.activities;
 
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.ContentResolver;
@@ -25,6 +24,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Arrays;
 
 import tech.linard.android.unleash.R;
 import tech.linard.android.unleash.Util;
@@ -47,15 +49,16 @@ public class MainActivity extends BaseActivity
 
     private static final long MOVE_DEFAULT_TIME = 1000;
     private static final long FADE_DEFAULT_TIME = 300;
-    
 
     // SYNC [START]
     // Sync interval constants
     public static final long SECONDS_PER_MINUTE = 60L;
     public static final long SYNC_INTERVAL_IN_MINUTES = 60L;
 
-
     // Constants
+    private static final int RC_SIGN_IN = 1001;
+
+
     // The authority for the sync adapter's content provider
     public static final String AUTHORITY = "tech.linard.android.unleash";
 
@@ -68,6 +71,7 @@ public class MainActivity extends BaseActivity
 
     // Instance fields
     Account mAccount;
+    FirebaseUser mUser;
 
     // SYNC [END]
 
@@ -85,7 +89,6 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         // Create the dummy account
         mAccount = CreateSyncAccount(this);
@@ -350,6 +353,7 @@ public class MainActivity extends BaseActivity
         int time = cursor.getInt(cursor.getColumnIndex(UnleashContract.TickerEntry.COLUMN_DATE));
         String timestamp = Util.getReadableDateFromUnixTime(time);
 
+        cursor.close();
         return "Unleash Bitcoin: Última transação no Mercado Bitcoin a R$: " + price
                 + " por Bitcoin. " + timestamp;
     }

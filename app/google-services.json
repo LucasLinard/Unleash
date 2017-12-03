@@ -59,6 +59,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "52752975626-36pqreo6rer1a093k82em9mlvpfid2be.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "tech.linard.android.unleash",
+            "certificate_hash": "57c70a9a447bbebf192f549ec1301817003d56eb"
+          }
+        },
+        {
           "client_id": "52752975626-jk6aksa5g2efibon1euiqoeo8910dgal.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

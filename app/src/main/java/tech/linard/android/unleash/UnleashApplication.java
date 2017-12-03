@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.facebook.stetho.Stetho;
 
+
 /**
  * Created by llinard on 07/07/17.
  */
@@ -28,6 +29,7 @@ public class UnleashApplication extends Application {
 
     private void configureStetho(Context applicationContext) {
         // Create an InitializerBuilder
+
         Stetho.InitializerBuilder initializerBuilder =
                 Stetho.newInitializerBuilder(this);
 
