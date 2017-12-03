@@ -22,11 +22,11 @@ import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import java.util.Arrays;
 
 import tech.linard.android.unleash.R;
 import tech.linard.android.unleash.Util;
@@ -69,7 +69,8 @@ public class MainActivity extends BaseActivity
     public static final String ACCOUNT = "dummyaccount";
 
 
-    // Instance fields
+    // Firebase instance fields
+    private FirebaseAuth mAuth;
     Account mAccount;
     FirebaseUser mUser;
 
@@ -80,6 +81,8 @@ public class MainActivity extends BaseActivity
 
     private ShareActionProvider mShareActionProvider;
 
+
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt("fragmentId", fragmentId);
@@ -89,6 +92,7 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mAuth = FirebaseAuth.getInstance();
 
         // Create the dummy account
         mAccount = CreateSyncAccount(this);
@@ -221,6 +225,17 @@ public class MainActivity extends BaseActivity
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            Toast.makeText(this, "Not logged in", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, LoginActivity.class));
+        } else {
+            Toast.makeText(this, "Logged in!", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     private boolean networkUp() {
         ConnectivityManager cm =
@@ -375,4 +390,5 @@ public class MainActivity extends BaseActivity
     public void onListFragmentInteraction(Trade item) {
 
     }
+
 }
