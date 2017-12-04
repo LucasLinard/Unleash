@@ -22,11 +22,15 @@ import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.squareup.picasso.Picasso;
 
 import tech.linard.android.unleash.R;
 import tech.linard.android.unleash.Util;
@@ -39,6 +43,7 @@ import tech.linard.android.unleash.model.Trade;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
+        NavigationView.OnClickListener,
         MainFragment.OnFragmentInteractionListener,
         OrderbookFragment.OnFragmentInteractionListener,
         TradeFragment.OnListFragmentInteractionListener {
@@ -46,6 +51,8 @@ public class MainActivity extends BaseActivity
     Fragment mFragmentNew = null;
     Fragment mFragmentOld = null;
     Fragment mFragmentWelcome = null;
+    TextView mUserName;
+    ImageView mUserImage;
 
     private static final long MOVE_DEFAULT_TIME = 1000;
     private static final long FADE_DEFAULT_TIME = 300;
@@ -78,6 +85,10 @@ public class MainActivity extends BaseActivity
 
     int fragmentId = 0;
 
+    // User INFO
+    String mName;
+    String mEmail;
+    Uri mPhotoUrl;
 
     private ShareActionProvider mShareActionProvider;
 
@@ -109,13 +120,18 @@ public class MainActivity extends BaseActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        View headerView = navigationView.getHeaderView(0);
 
+        mUserName = headerView.findViewById(R.id.nav_user_id);
+        mUserImage = headerView.findViewById(R.id.image_view_user);
+        mUserImage.setOnClickListener(this);
+
+        navigationView.setNavigationItemSelectedListener(this);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String interval = prefs.getString("sync_frequency", "180");
 
         if (Long.valueOf(interval) > 0) {
-
+            
             /*
              * Turn on periodic syncing
              */
@@ -153,6 +169,7 @@ public class MainActivity extends BaseActivity
                 changeFragment();
             }
         }
+
 
     }
 
@@ -234,7 +251,26 @@ public class MainActivity extends BaseActivity
             startActivity(new Intent(this, LoginActivity.class));
         } else {
             Toast.makeText(this, "Logged in!", Toast.LENGTH_SHORT).show();
+            // Name, email address, and profile photo Url
+            mName = currentUser.getDisplayName();
+            mEmail = currentUser.getEmail();
+            mPhotoUrl = currentUser.getPhotoUrl();
+
+            // Check if user's email is verified
+            boolean emailVerified = currentUser.isEmailVerified();
+
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mUserName.setText(mName);
+        Picasso.with(this)
+                .load(mPhotoUrl)
+                .error(R.drawable.ic_currency_btc_white_48dp)
+                .resize(250, 250)
+                .into(mUserImage);
     }
 
     private boolean networkUp() {
@@ -260,6 +296,11 @@ public class MainActivity extends BaseActivity
 
     }
 
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        return super.onContextItemSelected(item);
+    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -342,6 +383,7 @@ public class MainActivity extends BaseActivity
                 sendIntent.setType("text/plain");
                 startActivity(sendIntent);
                 break;
+
         }
         return itemName;
     }
@@ -391,4 +433,13 @@ public class MainActivity extends BaseActivity
 
     }
 
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.image_view_user:
+                startActivity(new Intent(this, LoginActivity.class));
+                break;
+        }
+
+    }
 }

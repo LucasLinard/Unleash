@@ -136,9 +136,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-
-
-
     }
 
     private void populateAutoComplete() {
