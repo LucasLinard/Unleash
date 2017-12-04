@@ -90,6 +90,11 @@
                 android:text="@string/action_log_out"
                 android:textStyle="bold" />
 
+            <com.google.android.gms.common.SignInButton
+            android:id="@+id/google_sign_in_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
