@@ -15,6 +15,8 @@ public class UnleashContract {
     public static final String PATH_TICKER = "ticker";
     public static final String PATH_TRADE = "trade";
     public static final String PATH_API_KEY = "api_key";
+    public static final String PATH_STOP_LOSS = "stop_loss";
+    public static final String PATH_EXCHANGES = "exchanges";
 
     public static final class TickerEntry implements BaseColumns {
         public static final Uri CONTENT_URI =
@@ -42,6 +44,7 @@ public class UnleashContract {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }
+
     public static final class TradeEntry implements BaseColumns {
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_TRADE).build();
@@ -80,10 +83,24 @@ public class UnleashContract {
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_API_KEY;
     }
+
     public static final class ExchangesEntry implements BaseColumns {
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_EXCHANGES).build();
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_EXCHANGES;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_EXCHANGES;
 
     }
+
     public static final class StopLossEntry implements BaseColumns {
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_STOP_LOSS).build();
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_STOP_LOSS;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_STOP_LOSS;
 
     }
 }
