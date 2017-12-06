@@ -14,7 +14,7 @@ public class UnleashContract {
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
     public static final String PATH_TICKER = "ticker";
     public static final String PATH_TRADE = "trade";
-
+    public static final String PATH_API_KEY = "api_key";
 
     public static final class TickerEntry implements BaseColumns {
         public static final Uri CONTENT_URI =
@@ -70,5 +70,20 @@ public class UnleashContract {
         public static Uri buildTradeUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
+    }
+
+    public static final class ApiKeysEntry implements BaseColumns {
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_API_KEY).build();
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_API_KEY;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_API_KEY;
+    }
+    public static final class ExchangesEntry implements BaseColumns {
+
+    }
+    public static final class StopLossEntry implements BaseColumns {
+
     }
 }
