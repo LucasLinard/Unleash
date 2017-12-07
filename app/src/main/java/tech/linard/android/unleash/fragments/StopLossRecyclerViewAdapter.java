@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import tech.linard.android.unleash.R;
@@ -38,8 +39,17 @@ public class StopLossRecyclerViewAdapter extends RecyclerView.Adapter<StopLossRe
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).getId());
-        holder.mContentView.setText(mValues.get(position).getUuid());
+        holder.mCotacao.setText(String.valueOf(mValues.get(position).getCotacaoBTC()));
+        holder.mQuantidade.setText(String.valueOf(mValues.get(position).getCotacaoBTC()));
+        int id = mValues.get(position).getExchangeId();
+        switch (id) {
+            case 0:
+                holder.mExchange.setText("Mercado Bitcoin");
+                break;
+            case 1:
+                holder.mExchange.setText("Foxbit");
+                break;
+        }
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,7 +57,7 @@ public class StopLossRecyclerViewAdapter extends RecyclerView.Adapter<StopLossRe
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
+                    mListener.onListFragmentInteraction(holder.mItem, v);
                 }
             }
         });
@@ -60,21 +70,22 @@ public class StopLossRecyclerViewAdapter extends RecyclerView.Adapter<StopLossRe
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
+        public final TextView mExchange;
+        public final TextView mCotacao;
+        public final TextView mQuantidade;
+        public final ImageView mEdit;
+
         public StopLoss mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mExchange = (TextView) view.findViewById(R.id.txt_exchange);
+            mCotacao = (TextView) view.findViewById(R.id.txt_cotacao);
+            mQuantidade = (TextView) view.findViewById(R.id.txt_quantidade);
+            mEdit = view.findViewById(R.id._stop_loss_edit_btn);
         }
 
-        @Override
-        public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
-        }
     }
 
 }

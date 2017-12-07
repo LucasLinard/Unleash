@@ -11,5 +11,6 @@ http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
     -->
     <dimen name="widget_margin">8dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="min_margin">04dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 </resources>

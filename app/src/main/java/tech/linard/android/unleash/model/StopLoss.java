@@ -20,6 +20,7 @@ public class StopLoss {
     }
 
     public StopLoss() {
+
     }
 
     public String getId() {

@@ -12,7 +12,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -31,14 +30,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
 import tech.linard.android.unleash.R;
@@ -106,7 +100,7 @@ public class MainActivity extends BaseActivity
     String mName;
     String mEmail;
     Uri mPhotoUrl;
-
+    FloatingActionButton fab;
     private ShareActionProvider mShareActionProvider;
 
 
@@ -130,18 +124,25 @@ public class MainActivity extends BaseActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 switch (fragmentId) {
                     case R.id.stop_loss:
                         Intent intent = new Intent(MainActivity.this, CrudStopLoss.class);
+                        StopLoss item = new StopLoss();
+                        intent.putExtra("cotação", item.getExchangeId());
+                        intent.putExtra("cotação", item.getId());
+                        intent.putExtra("cotação", item.getUuid());
+                        intent.putExtra("cotação", item.getCotacaoBTC());
+                        intent.putExtra("cotação", item.getQuantidadeBTC());
                         startActivity(intent);
                         break;
+                    default:
+                        shareQuote();
+                        break;
                 }
-                Snackbar.make(view, "Replace with your own action " + fragmentId, Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
             }
         });
 
@@ -284,16 +285,12 @@ public class MainActivity extends BaseActivity
             Toast.makeText(this, "Not logged in", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, LoginActivity.class));
         } else {
-            Toast.makeText(this, "Logged in!", Toast.LENGTH_SHORT).show();
-
             // Name, email address, and profile photo Url
             mName = mCurrentUser.getDisplayName();
             mEmail = mCurrentUser.getEmail();
             mPhotoUrl = mCurrentUser.getPhotoUrl();
-
             // Check if user's email is verified
             boolean emailVerified = mCurrentUser.isEmailVerified();
-
         }
     }
 
@@ -389,6 +386,7 @@ public class MainActivity extends BaseActivity
         mFragmentOld = mFragmentNew;
         switch (itemId) {
             case R.id.nav_home:
+                fab.setImageResource(R.drawable.ic_currency_btc_white_48dp);
                 fragmentId = R.id.nav_home;
                 mFragmentNew = new MainFragment();
                 itemName = getResources().getString(R.string.ticker);
@@ -404,6 +402,7 @@ public class MainActivity extends BaseActivity
                 itemName = getResources().getString(R.string.negociacoes);
                 break;
             case R.id.stop_loss:
+                fab.setImageResource(R.drawable.ic_add_black_24dp);
                 fragmentId = R.id.stop_loss;
                 mFragmentNew = new StopLossFragment();
                 itemName = getResources().getString(R.string.stop_loss);
@@ -416,22 +415,27 @@ public class MainActivity extends BaseActivity
             case R.id.nav_manage:
                 fragmentId = R.id.nav_manage;
                 startPreferenceActivity();
-
                 itemName = getResources().getString(R.string.confiiguracao);
                 break;
             case R.id.nav_send:
                 fragmentId = R.id.nav_send;
                 itemName = getResources().getString(R.string.enviar_cotacao);
-                Intent sendIntent = new Intent();
-                sendIntent.setAction(Intent.ACTION_SEND);
-                String shareText = fetchQuoteFromContentProvider();
-                sendIntent.putExtra(Intent.EXTRA_TEXT, shareText );
-                sendIntent.setType("text/plain");
-                startActivity(sendIntent);
+                shareQuote();
+
                 break;
 
         }
         return itemName;
+    }
+
+    private void shareQuote() {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        String shareText = fetchQuoteFromContentProvider();
+        sendIntent.putExtra(Intent.EXTRA_TEXT, shareText );
+        sendIntent.setType("text/plain");
+        startActivity(sendIntent);
+
     }
 
     private void startPreferenceActivity() {
@@ -490,8 +494,14 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public void onListFragmentInteraction(StopLoss item) {
-
+    public void onListFragmentInteraction(StopLoss item, View view) {
+        Intent intent = new Intent(this, CrudStopLoss.class);
+        intent.putExtra("exchangeId", item.getExchangeId());
+        intent.putExtra("id", item.getId());
+        intent.putExtra("uuid", item.getUuid());
+        intent.putExtra("cotacaoBTC", item.getCotacaoBTC());
+        intent.putExtra("quantidadeBTC", item.getQuantidadeBTC());
+        startActivity(intent);
     }
 
     @Override

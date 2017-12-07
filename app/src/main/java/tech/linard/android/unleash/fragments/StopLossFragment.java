@@ -2,7 +2,6 @@ package tech.linard.android.unleash.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -13,8 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -97,27 +94,6 @@ public class StopLossFragment extends Fragment {
 
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
-//            db.collection("stop_loss")
-//                    .whereEqualTo("uuid", user.getUid())
-//                    .get()
-//                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                        @Override
-//                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                            if (task.isSuccessful()) {
-//                                mStopLossList = new ArrayList<StopLoss>();
-//                                StopLoss stopLoss =  new StopLoss();
-//                                for (DocumentSnapshot document : task.getResult()) {
-//                                    Log.d(TAG, document.getId() + " => " + document.getData());
-//                                    stopLoss = document.toObject(StopLoss.class);
-//                                    mStopLossList.add(stopLoss);
-//                                }
-//                            } else {
-//                                Log.d(TAG, "Error getting documents: ", task.getException());
-//                            }
-//                            recyclerView.setAdapter(new StopLossRecyclerViewAdapter(mStopLossList, mListener));
-//                        }
-//                    });
-
             db.collection("stop_loss")
                     .whereEqualTo("uuid", user.getUid())
                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -172,7 +148,7 @@ public class StopLossFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(StopLoss item);
+        void onListFragmentInteraction(StopLoss item, View view);
     }
 
 }

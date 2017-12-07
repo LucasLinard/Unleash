@@ -66,7 +66,7 @@ public class MyExchangesRecyclerViewAdapter extends RecyclerView.Adapter<MyExcha
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
+            mIdView = (TextView) view.findViewById(R.id.token);
             mContentView = (TextView) view.findViewById(R.id.content);
         }
 

@@ -21,15 +21,19 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import tech.linard.android.unleash.R;
 import tech.linard.android.unleash.model.StopLoss;
+import tech.linard.android.unleash.model.User;
 
 public class CrudStopLoss extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = CrudStopLoss.class.getSimpleName();
     Spinner mSpinner;
     Button mSave;
+    Button mDelete;
     EditText mCotacao;
     EditText mQuantidade;
     StopLoss mStopLoss;
+    boolean edit = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +43,10 @@ public class CrudStopLoss extends AppCompatActivity implements View.OnClickListe
         mQuantidade = findViewById(R.id.edit_quantidade);
         mSave = findViewById(R.id.stop_loss_btn_save);
         mSave.setOnClickListener(this);
+        mDelete = findViewById(R.id.stop_loss_btn_delete);
+        mDelete.setOnClickListener(this);
+        mDelete.setEnabled(false);
+
 
         mSpinner = (Spinner) findViewById(R.id.spinner_exchange);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -47,7 +55,26 @@ public class CrudStopLoss extends AppCompatActivity implements View.OnClickListe
         mSpinner.setAdapter(adapter);
 
         Intent intent = this.getIntent();
+        String id = intent.getStringExtra("id");
+        String uuid = intent.getStringExtra("uuid");
+        int exchangeId = intent.getIntExtra("exchangeId",0);
+        double cotacaoBTC = intent.getDoubleExtra("cotacaoBTC",0.0);
+        double quantidadeBTC = intent.getDoubleExtra("quantidadeBTC",0.0);
 
+        mStopLoss = new StopLoss(id, uuid, exchangeId, cotacaoBTC, quantidadeBTC);
+        edit = false;
+        if (id != null) {
+            edit = true;
+            mDelete.setEnabled(true);
+            preencheCampos(mStopLoss);
+        }
+
+    }
+
+    private void preencheCampos(StopLoss mStopLoss) {
+        mCotacao.setText(String.valueOf(mStopLoss.getCotacaoBTC()));
+        mQuantidade.setText(String.valueOf(mStopLoss.getQuantidadeBTC()));
+        mSpinner.setSelection(mStopLoss.getExchangeId());
     }
 
     @Override
@@ -55,9 +82,15 @@ public class CrudStopLoss extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()) {
             case R.id.stop_loss_btn_save:
                 attemptSave();
+                finish();
+                break;
+            case R.id.stop_loss_btn_delete:
+                deleteFirebase();
+                finish();
                 break;
         }
     }
+
     private void attemptSave() {
         //Reset errors
         mCotacao.setError(null);
@@ -99,39 +132,84 @@ public class CrudStopLoss extends AppCompatActivity implements View.OnClickListe
         if (cancel) {
             focusView.requestFocus();
         } else {
-            insertInFireBase(cotacao, quantidade, mSpinner.getSelectedItemPosition());
+            mStopLoss.setCotacaoBTC(cotacao);
+            mStopLoss.setQuantidadeBTC(quantidade);
+
+            if (edit) {
+                updateInFireBase();
+            } else {
+                insertInFireBase();
+            }
         }
     }
 
-    private void insertInFireBase(Double cotacao, Double quantidade, int selectedItemPosition) {
+    private void updateInFireBase() {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         if (firebaseUser != null) {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
-            final StopLoss stopLoss = new StopLoss();
-            stopLoss.setUuid(firebaseUser.getUid());
-            stopLoss.setQuantidadeBTC(quantidade);
-            stopLoss.setExchangeId(selectedItemPosition);
-            stopLoss.setCotacaoBTC(cotacao);
-
-            db.collection("stop_loss")
-                    .add(stopLoss)
-                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            db.collection("stop_loss").document(mStopLoss.getId())
+                    .set(mStopLoss)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
-                        public void onSuccess(DocumentReference documentReference) {
-                            Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                            stopLoss.setId(documentReference.getId());
-                            FirebaseFirestore db = FirebaseFirestore.getInstance();
-                            DocumentReference dr = db.collection("stop_loss").document(stopLoss.getId());
-                            dr.update("id", stopLoss.getId());
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(CrudStopLoss.this, "Registro Salvo", Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Log.w(TAG, "Error adding document", e);
+                            Toast.makeText(CrudStopLoss.this, "Falha ao salvar Stop Loss", Toast.LENGTH_SHORT).show();
                         }
                     });
         }
     }
+
+    private void insertInFireBase() {
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        if (firebaseUser != null) {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            mStopLoss.setUuid(firebaseUser.getUid());
+            mStopLoss.setExchangeId(mSpinner.getSelectedItemPosition());
+
+            db.collection("stop_loss")
+                    .add(mStopLoss)
+                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            mStopLoss.setId(documentReference.getId());
+                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+                            DocumentReference dr = db.collection("stop_loss").document(mStopLoss.getId());
+                            dr.update("id", mStopLoss.getId());
+                            Toast.makeText(CrudStopLoss.this, "Registro Salvo", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(CrudStopLoss.this, "Falha ao salvar Stop Loss", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+    }
+
+    private void deleteFirebase() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("stop_loss").document(mStopLoss.getId())
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(CrudStopLoss.this, "Registro excluído", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error deleting document", e);
+                    }
+                });
+    }
+
 }
