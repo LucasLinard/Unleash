@@ -260,7 +260,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     signInWithEmail(email, password);
                     break;
             }
-
         }
     }
 
@@ -278,7 +277,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                            Toast.makeText(LoginActivity.this, R.string.auth_fail,
                                     Toast.LENGTH_SHORT).show();
 
                             updateUI(null);
@@ -303,7 +302,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                            Toast.makeText(LoginActivity.this, R.string.auth_fail,
                                     Toast.LENGTH_SHORT).show();
                             updateUI(null);
                         }
@@ -353,7 +352,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                            Toast.makeText(LoginActivity.this, R.string.auth_fail,
                                     Toast.LENGTH_SHORT).show();
                             updateUI(null);
                         }

@@ -28,9 +28,9 @@
 
 
     <!-- Example settings for Data & Sync -->
-    <string name="pref_header_data_sync">Data &amp; sync</string>
+    <string name="pref_header_data_sync">Dados e sincronização</string>
 
-    <string name="pref_title_sync_frequency">Sync frequency</string>
+    <string name="pref_title_sync_frequency">Frequencia de sincronização</string>
     <string name="ticker">Ticker</string>
     <string name="orderbook">Orderbook</string>
     <string name="negociacoes">Negociações</string>
@@ -39,12 +39,12 @@
     <string name="enviar_cotacao">Enviar cotação</string>
 
     <string-array name="pref_sync_frequency_titles">
-        <item>15 minutes</item>
-        <item>30 minutes</item>
-        <item>1 hour</item>
-        <item>3 hours</item>
-        <item>6 hours</item>
-        <item>Never</item>
+        <item>15 minutos</item>
+        <item>30 minutos</item>
+        <item>1 hora</item>
+        <item>3 horas</item>
+        <item>6 horas</item>
+        <item>Nunca</item>
     </string-array>
 
     <string-array name="pref_sync_frequency_values">
@@ -62,24 +62,25 @@
     <string name="txt_erro">Oops!</string>
     <string name="communicate">Compartilhar</string>
     <string name="unleash_bitcoin_tracker">Unleash Bitcoin Tracker</string>
-    <string name="btc">BTC:</string>
-    <string name="real_brasileiro">R$</string>
-    <string name="title_activity_login">Sign in</string>
+    <string name="btc">BTC: </string>
+    <string name="real_brasileiro">R$ </string>
+    <string name="title_activity_login">Entrar </string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
+    <string name="prompt_password">Senha (obrigatório)</string>
+    <string name="action_sign_in">Registrar</string>
+    <string name="action_sign_in_short">Entrar</string>
+    <string name="error_invalid_email">O email digitado é inválido</string>
+    <string name="error_invalid_password">Esta senha é muito pequena</string>
+    <string name="error_incorrect_password">A senha está incorreta</string>
+    <string name="error_field_required">Este campo é obrigatório</string>
+    <string name="permission_rationale">"Permissões de acesso a contatos são necessárias."
     </string>
-    <string name="action_log_in">LOG IN</string>
-    <string name="action_log_out">LOGOUT</string>
+    <string name="action_log_in">Enrar</string>
+    <string name="action_log_out">Sair</string>
     <string name="stop_loss">Stop Loss</string>
     <string name="exchanges">Exchanges</string>
+    <string name="auth_fail">Falha na autenticação</string>
+    <string name="salvar">Salvar</string>
 </resources>

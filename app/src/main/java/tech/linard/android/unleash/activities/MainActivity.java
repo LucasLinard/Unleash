@@ -42,7 +42,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.squareup.picasso.Picasso;
 
 import tech.linard.android.unleash.R;
@@ -57,7 +56,6 @@ import tech.linard.android.unleash.fragments.WelcomeFragment;
 import tech.linard.android.unleash.fragments.dummy.DummyContent;
 import tech.linard.android.unleash.model.StopLoss;
 import tech.linard.android.unleash.model.Trade;
-import tech.linard.android.unleash.model.User;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -140,7 +138,10 @@ public class MainActivity extends BaseActivity
             @Override
             public void onClick(View view) {
                 switch (fragmentId) {
-
+                    case R.id.stop_loss:
+                        Intent intent = new Intent(MainActivity.this, CrudStopLoss.class);
+                        startActivity(intent);
+                        break;
                 }
                 Snackbar.make(view, "Replace with your own action " + fragmentId, Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
@@ -464,11 +465,11 @@ public class MainActivity extends BaseActivity
 
 
                 break;
-            case R.id.exchanges:
-                fragmentId = R.id.trade_list;
-                mFragmentNew = new ExchangesFragment();
-                itemName = getResources().getString(R.string.exchanges);
-                break;
+//            case R.id.exchanges:
+//                fragmentId = R.id.trade_list;
+//                mFragmentNew = new ExchangesFragment();
+//                itemName = getResources().getString(R.string.exchanges);
+//                break;
             case R.id.nav_manage:
                 fragmentId = R.id.nav_manage;
                 startPreferenceActivity();
