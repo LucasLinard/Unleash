@@ -3,6 +3,7 @@ package tech.linard.android.unleash.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,22 +14,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import tech.linard.android.unleash.R;
-import tech.linard.android.unleash.fragments.dummy.DummyContent;
-import tech.linard.android.unleash.fragments.dummy.DummyContent.DummyItem;
 import tech.linard.android.unleash.model.StopLoss;
 
 /**
@@ -38,6 +36,13 @@ import tech.linard.android.unleash.model.StopLoss;
  * interface.
  */
 public class StopLossFragment extends Fragment {
+    @Override
+    public void onStart() {
+        super.onStart();
+
+    }
+
+    List<StopLoss> mStopLossList;
 
     String TAG = StopLossFragment.class.getSimpleName();
     // TODO: Customize parameter argument names
@@ -45,9 +50,6 @@ public class StopLossFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
-
-
-
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -69,7 +71,7 @@ public class StopLossFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mStopLossList = new ArrayList<StopLoss>();
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
@@ -83,7 +85,7 @@ public class StopLossFragment extends Fragment {
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+            final RecyclerView recyclerView = (RecyclerView) view;
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
@@ -92,31 +94,54 @@ public class StopLossFragment extends Fragment {
 
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
+
+
             FirebaseFirestore db = FirebaseFirestore.getInstance();
+//            db.collection("stop_loss")
+//                    .whereEqualTo("uuid", user.getUid())
+//                    .get()
+//                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                            if (task.isSuccessful()) {
+//                                mStopLossList = new ArrayList<StopLoss>();
+//                                StopLoss stopLoss =  new StopLoss();
+//                                for (DocumentSnapshot document : task.getResult()) {
+//                                    Log.d(TAG, document.getId() + " => " + document.getData());
+//                                    stopLoss = document.toObject(StopLoss.class);
+//                                    mStopLossList.add(stopLoss);
+//                                }
+//                            } else {
+//                                Log.d(TAG, "Error getting documents: ", task.getException());
+//                            }
+//                            recyclerView.setAdapter(new StopLossRecyclerViewAdapter(mStopLossList, mListener));
+//                        }
+//                    });
+
             db.collection("stop_loss")
                     .whereEqualTo("uuid", user.getUid())
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                StopLoss stopLoss =  new StopLoss();
-                                List<StopLoss> stopLossList = new ArrayList<>();
-                                for (DocumentSnapshot document : task.getResult()) {
-                                    Log.d(TAG, document.getId() + " => " + document.getData());
-                                    stopLoss = document.toObject(StopLoss.class);
-                                    stopLossList.add(stopLoss);
-                                }
-                            } else {
-                                Log.d(TAG, "Error getting documents: ", task.getException());
+                        public void onEvent(@Nullable QuerySnapshot value,
+                                            @Nullable FirebaseFirestoreException e) {
+                            if (e != null) {
+                                Log.w(TAG, "Listen failed.", e);
+                                return;
                             }
+                            mStopLossList = new ArrayList<StopLoss>();
+                            StopLoss stopLoss =  new StopLoss();
+                            for (DocumentSnapshot doc : value) {
+                                Log.d(TAG, doc.getId() + " => " + doc.getData());
+                                stopLoss = doc.toObject(StopLoss.class);
+                                mStopLossList.add(stopLoss);
+                            }
+                            recyclerView.setAdapter(new StopLossRecyclerViewAdapter(mStopLossList, mListener));
                         }
                     });
-            recyclerView.setAdapter(new StopLossRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            recyclerView.setAdapter(new StopLossRecyclerViewAdapter(mStopLossList, mListener));
         }
         return view;
     }
-
 
     @Override
     public void onAttach(Context context) {
@@ -147,6 +172,7 @@ public class StopLossFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(StopLoss item);
     }
+
 }

@@ -55,6 +55,10 @@
         <item>360</item>
         <item>-1</item>
     </string-array>
+    <string-array name="exchanges_array">
+        <item>Mercado Bitcoin</item>
+        <item>Foxbit</item>
+    </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="acesso_internet">Parece que você está sem acesso a internet.</string>
@@ -83,4 +87,5 @@
     <string name="exchanges">Exchanges</string>
     <string name="auth_fail">Falha na autenticação</string>
     <string name="salvar">Salvar</string>
+    <string name="erro_valor_zero">Valor maior que zero necessário</string>
 </resources>

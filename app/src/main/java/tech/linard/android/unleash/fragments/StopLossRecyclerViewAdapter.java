@@ -9,6 +9,7 @@ import android.widget.TextView;
 import tech.linard.android.unleash.R;
 import tech.linard.android.unleash.fragments.StopLossFragment.OnListFragmentInteractionListener;
 import tech.linard.android.unleash.fragments.dummy.DummyContent.DummyItem;
+import tech.linard.android.unleash.model.StopLoss;
 
 import java.util.List;
 
@@ -19,10 +20,10 @@ import java.util.List;
  */
 public class StopLossRecyclerViewAdapter extends RecyclerView.Adapter<StopLossRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<StopLoss> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public StopLossRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+    public StopLossRecyclerViewAdapter(List<StopLoss> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -37,8 +38,8 @@ public class StopLossRecyclerViewAdapter extends RecyclerView.Adapter<StopLossRe
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mIdView.setText(mValues.get(position).getId());
+        holder.mContentView.setText(mValues.get(position).getUuid());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,7 +62,7 @@ public class StopLossRecyclerViewAdapter extends RecyclerView.Adapter<StopLossRe
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
-        public DummyItem mItem;
+        public StopLoss mItem;
 
         public ViewHolder(View view) {
             super(view);

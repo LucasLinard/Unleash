@@ -32,13 +32,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -294,41 +291,6 @@ public class MainActivity extends BaseActivity
             mEmail = mCurrentUser.getEmail();
             mPhotoUrl = mCurrentUser.getPhotoUrl();
 
-
-
-
-            FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-            FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-            if (firebaseUser != null) {
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                final StopLoss stopLoss = new StopLoss();
-                stopLoss.setUuid(firebaseUser.getUid());
-                stopLoss.setQuantidadeBTC(10);
-                stopLoss.setExchangeId(1);
-                stopLoss.setCotacaoBTC(45000.45);
-
-                db.collection("stop_loss")
-                        .add(stopLoss)
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                            @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                                stopLoss.setId(documentReference.getId());
-                                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                DocumentReference dr = db.collection("stop_loss").document(stopLoss.getId());
-                                dr.update("id", stopLoss.getId());
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w(TAG, "Error adding document", e);
-                            }
-                        });
-
-            }
-
-
             // Check if user's email is verified
             boolean emailVerified = mCurrentUser.isEmailVerified();
 
@@ -445,25 +407,6 @@ public class MainActivity extends BaseActivity
                 fragmentId = R.id.stop_loss;
                 mFragmentNew = new StopLossFragment();
                 itemName = getResources().getString(R.string.stop_loss);
-
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                db.collection("stop_loss")
-                        .whereEqualTo("token", mCurrentUser.getUid())
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    for (DocumentSnapshot document : task.getResult()) {
-                                        Log.d(TAG, document.getId() + " => " + document.getData());
-                                    }
-                                } else {
-                                    Log.d(TAG, "Error getting documents: ", task.getException());
-                                }
-                            }
-                        });
-
-
                 break;
 //            case R.id.exchanges:
 //                fragmentId = R.id.trade_list;
@@ -547,8 +490,12 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+    public void onListFragmentInteraction(StopLoss item) {
 
     }
 
+    @Override
+    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+
+    }
 }
