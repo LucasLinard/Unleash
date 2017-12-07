@@ -77,6 +77,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private Button mEmailLogInButton;
     private Button mEmailLogOutButton;
 
+
+    private TextView mRecover;
     private SignInButton mGoogleSignInButton;
     private GoogleSignInClient mGoogleSignInClient;
 
@@ -125,6 +127,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        mRecover = findViewById(R.id.recover);
+        mRecover.setOnClickListener(this);
 
 
         // Configure Google Sign In
@@ -227,6 +232,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
+        if (TextUtils.isEmpty(password)) {
+            mPasswordView.setError(getString(R.string.error_field_required));
+            focusView = mPasswordView;
+            cancel = true;
+        }
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
@@ -272,8 +282,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            //finish();
                             updateUI(user);
+                            finish();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -284,6 +294,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         }
 
                         showProgress(false);
+                    }
+                });
+    }
+
+    private void recoverPassword(String emailAddress) {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth.sendPasswordResetEmail(emailAddress)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "Email sent.");
+                        }
                     }
                 });
     }
@@ -464,6 +487,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 break;
             case R.id.google_sign_in_button:
                 signInWithGoogle();
+                break;
+            case R.id.recover:
+                recoverPassword(String.valueOf(mEmailView.getText()));
         }
 
     }

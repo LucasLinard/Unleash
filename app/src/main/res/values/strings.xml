@@ -88,4 +88,5 @@
     <string name="auth_fail">Falha na autenticação</string>
     <string name="salvar">Salvar</string>
     <string name="erro_valor_zero">Valor maior que zero necessário</string>
+    <string name="esqueci_minha_senha">Esqueci Minha senha</string>
 </resources>

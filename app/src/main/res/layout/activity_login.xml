@@ -61,25 +61,47 @@
                     android:maxLines="1"
                     android:singleLine="true" />
 
+                <TextView
+                    android:id="@+id/recover"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:autoLink="web"
+                    android:linksClickable="false"
+                    android:text="@string/esqueci_minha_senha"
+                    android:textStyle="italic" />
+
             </android.support.design.widget.TextInputLayout>
 
-            <Button
-                android:id="@+id/email_sign_in_button"
-                style="?android:textAppearanceSmall"
+            <LinearLayout
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/action_sign_in"
-                android:textStyle="bold" />
+                android:layout_height="wrap_content">
 
-            <Button
-                android:id="@+id/email_log_in"
-                style="?android:textAppearanceSmall"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/action_log_in"
-                android:textStyle="bold" />
+                <Button
+                    android:layout_weight="1
+"
+                    android:id="@+id/email_sign_in_button"
+                    style="?android:textAppearanceSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/action_sign_in"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:layout_weight="1"
+                    android:id="@+id/email_log_in"
+                    style="?android:textAppearanceSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/action_log_in"
+                    android:textStyle="bold" />
+
+
+            </LinearLayout>
 
             <Button
                 android:id="@+id/email_log_out"
