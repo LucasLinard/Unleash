@@ -5,24 +5,37 @@ package tech.linard.android.unleash.model;
  */
 
 public class StopLoss {
-    private String token;
+    private String id;
+    private String uuid;
     private int exchangeId;
     private double cotacaoBTC;
     private double quantidadeBTC;
 
-    public StopLoss(String token, int exchangeId, double cotacaoBTC, double quantidadeBTC) {
-        this.token = token;
+    public StopLoss(String id, String uuid, int exchangeId, double cotacaoBTC, double quantidadeBTC) {
+        this.id = id;
+        this.uuid = uuid;
         this.exchangeId = exchangeId;
         this.cotacaoBTC = cotacaoBTC;
         this.quantidadeBTC = quantidadeBTC;
     }
 
-    public String getToken() {
-        return token;
+    public StopLoss() {
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public int getExchangeId() {

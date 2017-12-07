@@ -262,7 +262,7 @@ public class OrderbookFragment extends Fragment {
         }
         public double getQuartile(double[] values, double percent){
             if (values == null || values.length == 0) {
-                throw new IllegalArgumentException("The data array either is null or does not contain any data.");
+                throw new IllegalArgumentException("Array nulo o vazio");
             }
             double[] v = new double[values.length];
             System.arraycopy(values, 0, v, 0, values.length);

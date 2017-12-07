@@ -139,7 +139,10 @@ public class MainActivity extends BaseActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                switch (fragmentId) {
+
+                }
+                Snackbar.make(view, "Replace with your own action " + fragmentId, Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -292,43 +295,37 @@ public class MainActivity extends BaseActivity
 
 
 
-            User user = new User(mCurrentUser.getUid()
-                    , FirebaseInstanceId.getInstance().getToken());
 
-            // Access a Cloud Firestore instance from your Activity
+            FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+            FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+            if (firebaseUser != null) {
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                final StopLoss stopLoss = new StopLoss();
+                stopLoss.setUuid(firebaseUser.getUid());
+                stopLoss.setQuantidadeBTC(10);
+                stopLoss.setExchangeId(1);
+                stopLoss.setCotacaoBTC(45000.45);
 
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            StopLoss stopLoss = new StopLoss(mCurrentUser.getUid(), 1, 44000.00123, 1.0);
-            db.collection("stop_loss")
-                    .add(stopLoss)
-                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                        @Override
-                        public void onSuccess(DocumentReference documentReference) {
-                            Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.w(TAG, "Error adding document", e);
-                        }
-                    });
+                db.collection("stop_loss")
+                        .add(stopLoss)
+                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                                Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                                stopLoss.setId(documentReference.getId());
+                                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                DocumentReference dr = db.collection("stop_loss").document(stopLoss.getId());
+                                dr.update("id", stopLoss.getId());
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w(TAG, "Error adding document", e);
+                            }
+                        });
 
-            db = FirebaseFirestore.getInstance();
-            db.collection("users").document(user.getUuid())
-                    .set(user)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.d(TAG, "DocumentSnapshot successfully written!");
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.w(TAG, "Error writing document", e);
-                        }
-                    });
+            }
 
 
             // Check if user's email is verified

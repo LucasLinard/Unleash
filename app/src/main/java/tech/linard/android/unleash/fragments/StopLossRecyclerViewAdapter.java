@@ -75,4 +75,5 @@ public class StopLossRecyclerViewAdapter extends RecyclerView.Adapter<StopLossRe
             return super.toString() + " '" + mContentView.getText() + "'";
         }
     }
+
 }
