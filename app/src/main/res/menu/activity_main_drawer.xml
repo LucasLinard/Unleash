@@ -11,6 +11,14 @@
             android:icon="@drawable/charts"
             android:title="@string/orderbook" />
         <item
+            android:id="@+id/stop_loss"
+            android:icon="@drawable/ic_stop_loss"
+            android:title="@string/stop_loss" />
+        <item
+            android:id="@+id/exchanges"
+            android:icon="@drawable/ic_exchange"
+            android:title="@string/exchanges" />
+        <item
             android:id="@+id/trade_list"
             android:icon="@drawable/list"
             android:title="@string/negociacoes" />

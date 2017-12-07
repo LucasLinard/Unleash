@@ -37,6 +37,7 @@
     <string name="confiiguracao">Configuração</string>
     <string name="compartilhar">Compartilhar</string>
     <string name="enviar_cotacao">Enviar cotação</string>
+
     <string-array name="pref_sync_frequency_titles">
         <item>15 minutes</item>
         <item>30 minutes</item>
@@ -79,4 +80,6 @@
     </string>
     <string name="action_log_in">LOG IN</string>
     <string name="action_log_out">LOGOUT</string>
+    <string name="stop_loss">Stop Loss</string>
+    <string name="exchanges">Exchanges</string>
 </resources>

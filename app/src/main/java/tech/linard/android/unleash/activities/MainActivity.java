@@ -12,6 +12,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -20,6 +21,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,32 +29,48 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
 import tech.linard.android.unleash.R;
 import tech.linard.android.unleash.Util;
 import tech.linard.android.unleash.data.UnleashContract;
+import tech.linard.android.unleash.fragments.ExchangesFragment;
 import tech.linard.android.unleash.fragments.MainFragment;
 import tech.linard.android.unleash.fragments.OrderbookFragment;
+import tech.linard.android.unleash.fragments.StopLossFragment;
 import tech.linard.android.unleash.fragments.TradeFragment;
 import tech.linard.android.unleash.fragments.WelcomeFragment;
+import tech.linard.android.unleash.fragments.dummy.DummyContent;
+import tech.linard.android.unleash.model.StopLoss;
 import tech.linard.android.unleash.model.Trade;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
+        ExchangesFragment.OnListFragmentInteractionListener,
+        StopLossFragment.OnListFragmentInteractionListener,
         NavigationView.OnClickListener,
         MainFragment.OnFragmentInteractionListener,
         OrderbookFragment.OnFragmentInteractionListener,
         TradeFragment.OnListFragmentInteractionListener {
 
+    private static final String TAG = MainActivity.class.getSimpleName();
     Fragment mFragmentNew = null;
     Fragment mFragmentOld = null;
     Fragment mFragmentWelcome = null;
     TextView mUserName;
     ImageView mUserImage;
+    FirebaseUser mCurrentUser;
 
     private static final long MOVE_DEFAULT_TIME = 1000;
     private static final long FADE_DEFAULT_TIME = 300;
@@ -171,6 +189,8 @@ public class MainActivity extends BaseActivity
         }
 
 
+
+
     }
 
     /**
@@ -245,19 +265,39 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onStart() {
         super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser == null) {
+        mCurrentUser = mAuth.getCurrentUser();
+        if (mCurrentUser == null) {
             Toast.makeText(this, "Not logged in", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, LoginActivity.class));
         } else {
             Toast.makeText(this, "Logged in!", Toast.LENGTH_SHORT).show();
             // Name, email address, and profile photo Url
-            mName = currentUser.getDisplayName();
-            mEmail = currentUser.getEmail();
-            mPhotoUrl = currentUser.getPhotoUrl();
+            mName = mCurrentUser.getDisplayName();
+            mEmail = mCurrentUser.getEmail();
+            mPhotoUrl = mCurrentUser.getPhotoUrl();
+
+            // Access a Cloud Firestore instance from your Activity
+
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            StopLoss stopLoss = new StopLoss(mCurrentUser.getUid(), 1, 44000.00123, 1.0);
+            db.collection("stop_loss")
+                    .add(stopLoss)
+                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "Error adding document", e);
+                        }
+                    });
+
 
             // Check if user's email is verified
-            boolean emailVerified = currentUser.isEmailVerified();
+            boolean emailVerified = mCurrentUser.isEmailVerified();
 
         }
     }
@@ -268,6 +308,7 @@ public class MainActivity extends BaseActivity
         mUserName.setText(mName);
         Picasso.with(this)
                 .load(mPhotoUrl)
+                .placeholder(R.drawable.ic_currency_btc_white_48dp)
                 .error(R.drawable.ic_currency_btc_white_48dp)
                 .resize(250, 250)
                 .into(mUserImage);
@@ -367,6 +408,35 @@ public class MainActivity extends BaseActivity
                 mFragmentNew = new TradeFragment();
                 itemName = getResources().getString(R.string.negociacoes);
                 break;
+            case R.id.stop_loss:
+                fragmentId = R.id.stop_loss;
+                mFragmentNew = new StopLossFragment();
+                itemName = getResources().getString(R.string.stop_loss);
+
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                db.collection("stop_loss")
+                        .whereEqualTo("token", mCurrentUser.getUid())
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (DocumentSnapshot document : task.getResult()) {
+                                        Log.d(TAG, document.getId() + " => " + document.getData());
+                                    }
+                                } else {
+                                    Log.d(TAG, "Error getting documents: ", task.getException());
+                                }
+                            }
+                        });
+
+
+                break;
+            case R.id.exchanges:
+                fragmentId = R.id.trade_list;
+                mFragmentNew = new ExchangesFragment();
+                itemName = getResources().getString(R.string.exchanges);
+                break;
             case R.id.nav_manage:
                 fragmentId = R.id.nav_manage;
                 startPreferenceActivity();
@@ -442,4 +512,10 @@ public class MainActivity extends BaseActivity
         }
 
     }
+
+    @Override
+    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+
+    }
+
 }
