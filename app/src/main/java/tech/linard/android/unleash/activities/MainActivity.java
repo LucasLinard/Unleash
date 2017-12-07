@@ -13,7 +13,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -40,6 +42,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.squareup.picasso.Picasso;
 
 import tech.linard.android.unleash.R;
@@ -54,6 +57,7 @@ import tech.linard.android.unleash.fragments.WelcomeFragment;
 import tech.linard.android.unleash.fragments.dummy.DummyContent;
 import tech.linard.android.unleash.model.StopLoss;
 import tech.linard.android.unleash.model.Trade;
+import tech.linard.android.unleash.model.User;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -130,6 +134,15 @@ public class MainActivity extends BaseActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -271,10 +284,16 @@ public class MainActivity extends BaseActivity
             startActivity(new Intent(this, LoginActivity.class));
         } else {
             Toast.makeText(this, "Logged in!", Toast.LENGTH_SHORT).show();
+
             // Name, email address, and profile photo Url
             mName = mCurrentUser.getDisplayName();
             mEmail = mCurrentUser.getEmail();
             mPhotoUrl = mCurrentUser.getPhotoUrl();
+
+
+
+            User user = new User(mCurrentUser.getUid()
+                    , FirebaseInstanceId.getInstance().getToken());
 
             // Access a Cloud Firestore instance from your Activity
 
@@ -292,6 +311,22 @@ public class MainActivity extends BaseActivity
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             Log.w(TAG, "Error adding document", e);
+                        }
+                    });
+
+            db = FirebaseFirestore.getInstance();
+            db.collection("users").document(user.getUuid())
+                    .set(user)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d(TAG, "DocumentSnapshot successfully written!");
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "Error writing document", e);
                         }
                     });
 
